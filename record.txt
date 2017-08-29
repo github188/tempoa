@@ -1,0 +1,12 @@
+2. config.js出现好几个
+1. localstorge代替cookie
+3. 登录后不能再访问login.html
+4: 头像功能
+
+
+组件: v-panel
+扩展组件： 单选多选， 利用表单的radio和checkbox，进行多选单选筛选
+区域选择：
+营销中心查询
+tableList组件
+可配字段统一获取
