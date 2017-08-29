@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import store from '@/vuex/'
 import common from '@/utils/common'
 
-import { Login, Index, ModulePage, Project, ProjectManage, DemandManage, NewsIndex, NewsList, NewsDetail, WorkIndex, WorkList, WorkDetail, Attendance, AttendanceReport, AttendanceSetting, Affairs, AffairsContact, AffairsAttendance, Organize, OrganizePerson, OrganizeRole, OrganizeMenu } from './index'
+import { Login, Index, PersonInfo, ModulePage, Project, ProjectManage, DemandManage, NewsIndex, NewsList, NewsDetail, WorkIndex, WorkList, WorkDetail, Attendance, AttendanceReport, AttendanceSetting, Affairs, AffairsContact, AffairsAttendance, Organize, OrganizePerson, OrganizeRole, OrganizeMenu } from './index'
 
 Vue.use(Router)
 
@@ -103,8 +103,13 @@ const router = new Router({
         path: '/work',
         name: 'work',
         component: WorkIndex,
-        meta: { title: '工单中心' },
+        meta: { title: '我的工作台' },
         children: workOrder
+    }, {
+        path: '/person',
+        name: 'person',
+        component: PersonInfo,
+        meta: { title: '个人信息' }
     }, {
         path: '/index',
         name: 'index',
@@ -147,7 +152,7 @@ router.beforeEach(({ meta, path }, from, next) => {
         console.log('已经登录....');
         return next({ path: '/index' });
     }
-    document.title = `亿车科技OA - ${meta.title?meta.title:''}`;
+    document.title = `亿车科技EAP - ${meta.title?meta.title:''}`;
     next();
 })
 

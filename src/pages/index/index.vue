@@ -9,8 +9,13 @@
 				</ul> -->
 
 		<div class="content index-content">
+			
 			<div class="content-side">
+				
 				<div class="person-new">
+					<p class="list-tag" style="padding-left: 24px; margin-top:-10px">
+						<span>新人秀</span>
+					</p>
 					<el-carousel trigger="click" :autoplay="false" arrow="never" height="290px">
 						<el-carousel-item v-for="(item, index) in workMate" :key="index">
 							<img :alt="item.name" :src="require('./img/workmate/'+item.src)">
@@ -110,7 +115,9 @@
 						</ul>
 					</div>
 					<div class="person-info box">
-						<img :alt="personInfo.realname" :src="avatar">
+						<router-link to="/person" title="查看个人信息">
+							<img :alt="personInfo.realname" :src="avatar">
+						</router-link>
 						<p class="person-name">{{personInfo.realname}}</p>
 						<p class="person-pos">{{personInfo.depName}}&nbsp;&nbsp;&nbsp;&nbsp;{{personInfo.post}}</p>
 					</div>
@@ -161,28 +168,35 @@
 				</div>
 				<div class="content-r">
 					<div class="public-news">
-						<p class="list-tag">
-							<span>新闻公告</span>
-							<a href="/news/list">更多</a>
-						</p>
-						<!-- <div class="public-news-content" v-if="stickNews.id">
-		                            <img :src="setTopImg">
-		                            <div class="top-line">
-		                                <h2 class="top-line-title">
-		                                	<span  class="top-line-tag" :class="stickNews.newsType==0 ? 'top-line-tag-news' : 'top-line-tag-publish'">{{stickNews.newsType==0?'新闻':'公告'}}</span><router-link :to="{ path: '/news/detail', query: {id: stickNews.id}}">{{stickNews.newsTitle}}</router-link><span class="top-line-time"> {{stickNews.addTime && new Date(stickNews.addTime).toString()}}</span>
-		                            	</h2>
-		                                <p class="top-line-content">{{stickNews.content|getContent}}</p>
-		                            </div>
-		                            <ul class="top-line-list">
-		                              <li v-for="(item, index) in topNews" :key="index">
-		                              	<span class="top-line-tag" :class="item.newsType==0?'top-line-tag-news' : 'top-line-tag-publish'">{{item.newsType==0?'新闻':'公告'}}</span>
-		                              	<router-link :to="{ path: '/news/detail', query: {id: item.id}}">{{item.newsTitle}}</router-link>
-		                              	<span class="top-line-time"> {{new Date(item.addTime).toString()}}</span>
-			                          </li>
-		                            </ul>
-		                        </div> -->
-						<!-- <p v-else style="margin-top: 130px; text-align: center;">暂无数据！</p> -->
-					</div>
+                    <p class="list-tag">
+                        <span>企业动态</span>
+                        <a target="_blank" href="/news/list">更多</a>
+                    </p>
+                    <div class="public-news-content">
+                            <img id="public-news-img" alt="" src="skins/img/news-default.png">
+                            <div class="top-line">
+                                <h2 class="top-line-title" id="topPublic">
+									<span class="top-line-tag top-line-tag-news" v-if="stickNews.newsType == 0">新闻</span>
+									<span class="top-line-tag top-line-tag-publish" v-if="stickNews.newsType == 1">公告</span>
+									<router-link :to="'/news/detail/?id=' + stickNews.id">{{stickNews.newsTitle}}</router-link>								
+									<em class="tag-icon tag-icon-top">Top</em>
+									<span class="top-line-time" style="margin-top: 0;"> 2017-08-28 13:59:58</span>
+								</h2>
+                                <p id="topPublicContent" class="top-line-content">{{stickNews.content | getContent}}</p>
+                            </div>
+                        
+                        <ul id="topNews" class="top-line-list">
+							<li class="top-line-title" v-for="(item, index) in topNews" :key="index">
+								<span class="top-line-tag top-line-tag-news" v-if="item.newsType == 0">新闻</span>
+								<span class="top-line-tag top-line-tag-publish" v-if="item.newsType == 1">公告</span>
+								<router-link :to="'/news/detail/?id=' + item.id">{{item.newsTitle}}</router-link>
+								<em class="tag-icon tag-icon-new" v-if="restTime(item.publishDate)">New</em>
+								<span class="top-line-time"> {{new Date(item.publishDate).toString()}}</span>
+							</li>
+					
+						</ul>
+                    </div>
+                </div>
 					<div class="my-work">
 						<p class="list-tag">
 							<span>我的工作台</span>
@@ -205,7 +219,7 @@
 									</li>
 								</ul>
 								<p style="margin-top: 130px; text-align:center" v-else>
-									暂无数据！
+									勤劳如您，一个待办都木有，点赞！
 								</p>
 								</ul>
 							</el-tab-pane>
@@ -221,7 +235,7 @@
 									</li>
 								</ul>
 								<p style="margin-top: 130px; text-align:center" v-else>
-									暂无数据！
+									您还没有发起过任何申请，此处空空如也。
 								</p>
 							</el-tab-pane>
 
@@ -283,8 +297,8 @@
 }
 
 .person-new img {
-	height: 120px;
-	width: 120px;
+	height: 90px;
+	width: 90px;
 	display: block;
 	border-radius: 100%;
 	background: #f06;
@@ -606,7 +620,7 @@
 
 .list-tag:before {
 	position: absolute;
-	top: 0;
+	top: 3px;
 	content: '';
 	height: 16px;
 	width: 4px;
@@ -670,7 +684,7 @@
 	font-size: 14px;
 	color: #3e3e3e;
 	display: inline-block;
-	width: 35%;
+	max-width: 35%;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
@@ -715,7 +729,10 @@
 	line-height: 35px;
 	font-size: 14px;
 }
-
+.top-line-list .top-line-tag{
+	position: relative;
+	top: -12px;
+}
 .my-work {
 	width: 100%;
 	height: 390px;
@@ -817,6 +834,23 @@
 	color: #979797;
 	font-size: 12px;
 }
+.tag-icon {
+    font-size: 12px;
+    font-style: normal;
+    position: relative;
+    top: -8px;
+    left: -4px;
+    font-weight: bold;
+}
+.tag-icon-top{
+    color: #0B99EA;
+    left: 4px;
+}
+.tag-icon-new{
+    color: #F42C0B;
+    left: 4px;
+    top: -18px;
+}
 </style>
 
 <style>
@@ -846,10 +880,7 @@
 	font-size: 14px;
 }
 
-
-
 /*重置幻灯片样式*/
-
 .index-content .el-carousel__button {
 	background-color: #01cd78;
 	width: 6px;
@@ -878,6 +909,10 @@
 
 .index-content .el-carousel__arrow:hover i {
 	color: #01cd78;
+}
+
+.person-new .el-carousel__indicators{
+	bottom: 20px
 }
 </style>
 
@@ -1178,9 +1213,9 @@ export default {
 			url: '/news/common/list',
 			data: {
 				isTop: 0,
-				pageNum: 1,
-				pageSize: 1,
-				isPublish: 0
+				pageNum:1,
+				pageSize:1,
+				isPublish:0
 			},
 			success(data, $this) {
 				if (data.code == 'success') {
@@ -1260,7 +1295,6 @@ export default {
 			})
 		}.bind(this);
 
-
 		let getMenuButton = function(id) {
 			this.ajax({
 				url: '/authority/resource/user/resources?resourceId=' + id,
@@ -1285,9 +1319,6 @@ export default {
 				}
 			})
 		}.bind(this);
-
-
-
 		let getMenuEntry = async function() {
 			for (let i = 0; i < baseUrl.length; i++) {
 				let menu = await getMenu(baseUrl[i]);
@@ -1300,7 +1331,7 @@ export default {
 	filters: {
 		getContent(value) {
 			if (value) {
-				return (Utils.unescapeHtml(value).replace(/<\/?[^>]*>/g, '')).substring(0, 174) + '......';
+				return (Utils.unescapeHtml(value).replace(/<\/?[^>]*>/g, '')).substring(0, 144) + '......';
 			}
 		}
 	},
@@ -1314,7 +1345,18 @@ export default {
 		}
 	},
 	methods: {
-
+		restTime(dateTimeStamp){
+			var minute = 1000 * 60;
+			var hour = minute * 60;
+			var day = hour * 24;
+			var now = new Date().getTime();
+			var diffValue = now - dateTimeStamp;
+			var dayC =diffValue/day;
+			if(dayC <= 5){
+				return true;
+			}
+			return false;
+		}
 	}
 }
 </script>

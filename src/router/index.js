@@ -2,6 +2,8 @@ import Login from '@/pages/login/' //登陆页面
 import Index from '@/pages/Index/' //首页
 import ModulePage from '@/pages/layout/' //功能模块入口
 
+import PersonInfo from '@/pages/index/person/' //个人信息
+
 import Project from '@/pages/project/' //项目管理入口
 import ProjectManage from '@/pages/project/manage/projectManage' //项目管理页面
 import DemandManage from '@/pages/project/demand/demandManage' //项目管理页面
@@ -30,6 +32,7 @@ import OrganizeMenu from '@/pages/organize/menu/' //菜单管理
 export {
     Login,
     Index,
+    PersonInfo,
     ModulePage,
     Project,
     ProjectManage,

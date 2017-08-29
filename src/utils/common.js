@@ -13,8 +13,9 @@ window.Utils = {
             });
         },
         getAvatar(data) {
+
             const { headPic, sex } = data;
-            if (headPic && headPic.split('.')[1] !== 'png' && headPic != '') {
+            if (headPic != '') {
                 return appHost + appRoot + avatar + headPic + '/download';
             }
             if (sex == 1) {
@@ -92,6 +93,14 @@ window.Utils = {
             s = s.replace(/&quot;/g, "\"");
             s = s.replace(/<br>/g, "\n");
             return s;
+        },
+        /**
+         * 
+         * @param {过滤html标签} str 
+         */
+        filterHtmlTag(str) {
+            str = typeof str == 'string' ? str.replace(/<\/?[^>]*>/g, '') : str;
+            return str.trimAll();
         }
 
     }

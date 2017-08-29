@@ -1,26 +1,42 @@
-<template>
+			<template>
 	<header class="header">
         <div class="header-box">
             <a href="/index" class="logo" title="亿车科技OA系统首页">
                 <h2>
-                    <img src="../index/img/logo.png" alt="">
+                    <img src="./img/logo.png" alt="">
                 </h2>
             </a>
-            <div class="search">
+            <!-- <div class="search">
                 <input type="text" placeholder="输入关键字搜索">
-            </div>
-            <div class="setting">
-                <ul>
-                    <li class="menu"><a href="#">消息</a></li>
+            </div> -->
+
+			<div class="setting">
+ 				<ul>
+                    <li class="menu">
+                        <a title="邮箱" @click="getEmailUrl" class="message" href="javascript:;"></a>
+						<template v-if="(emailNum > 1)">
+							 <div class="email-num" v-if="(emailNum > 99)">
+								<span>99</span>
+								<em>+</em>
+							</div>
+							<div class="email-num" v-else>{{emailNum}}</div>
+						</template>
+                    </li>
+
                     <li class="menu" @mouseover="showMenu" @mouseout="hideMenu">
-                    	<a href="javascript:;">设置 <em class="setting-icon"></em></a>
+                        <a class="setting" href="javascript:;"></a>
                         <ol v-show="menu" class="sub-menu">
                             <li><a href="javascript:;" @click="dialog = true">修改密码</a></li>
-                            <li><a href="javascript:;" @click="logOut">登出</a></li>
+                            <li>
+								<router-link to="/person">个人信息</router-link>
+							</li>
                         </ol>
                     </li>
+                    <li class="menu">
+						<a title="退出" @click="logOut" class="log-out" href="#"></a>
+					</li>
                 </ul>
-            </div>
+			</div>
         </div>
 
         <el-dialog title="修改密码" :visible.sync="dialog" :modal-append-to-body="false" size="tiny">
@@ -44,34 +60,6 @@
 	        </el-form>
 		</el-dialog>
 
-
-
-
-        <!--  <Modal v-model="modal" title="修改密码">
-
-	         <Form ref="changePassword" :model="change" :rules="rule" :label-width="80">
-	           <Form-item label="原密码" prop="passwdOld" style="margin-bottom: 25px">
-		            <Input type="password" v-model="change.passwdOld"></Input>
-		        </Form-item>
-		        <Form-item label="密码" prop="passwd" style="margin-bottom: 25px">
-		            <Input type="password" v-model="change.passwd"></Input>
-		        </Form-item>
-		        <Form-item label="确认密码" prop="passwdCheck" style="margin-bottom: 25px">
-		            <Input type="password" v-model="change.passwdCheck"></Input>
-		        </Form-item>
-
-		        <Form-item>
-		            <Button type="success" @click="handleSubmit('changePassword')">提交</Button>
-		            <Button type="ghost" @click="closeModal" style="margin-left: 8px">取消</Button>
-		        </Form-item>
-
-
-		    </Form>
-
-		    <div slot="footer"></div>
-	        
-	    </Modal>
- -->
     </header>
 </template>
 
@@ -86,35 +74,36 @@
 	    left: 0;
 	    width: 100%;
 	    z-index: 1000;
+		box-shadow: 0 0 8px rgba(46, 48, 55, 0.51);
 	}
 
 	.header-box {
 	    max-width: 1440px;
 	    margin: 0 auto;
 	    height: 72px;
-	    box-shadow: -1px 3px 3px #e4e6eb;
-	    -webkit-box-shadow: -1px 3px 3px #e4e6eb;
 	}
 
 	.logo {
 	    display: block;
-	    width: 240px;
+	    width: 204px;
 	    height: 72px;
 	    line-height: 72px;
 	    float: left;
-	    background: #01cd78;
 	    text-align: center;
 	}
-	.search {
+	.logo img{
+		vertical-align: middle;
+	}
+	/* .search {
 	    width: 312px;
 	    height: 36px;
 	    float: left;
 	    margin-left: 30px;
-	    background: #f3f5f7 url("../Index/img/icon.png") no-repeat -93px -126px;
+	    background: #f3f5f7 url("./img/icon.png") no-repeat -93px -126px;
 	    border-radius: 30px;
 	    margin-top: 18px;
 	    overflow: hidden;
-	}
+	} */
 	.search input {
 	    width: 240px;
 	    border: none;
@@ -127,80 +116,115 @@
 	}
 
 	.setting {
-	    float: right;
-	    height: 72px;
-	    line-height: 72px;
+		float: right;
+		height: 72px;
+		line-height: 72px;
 	}
 
 	.setting ul li.menu {
-	    float: left;
-	    width: 70px;
-	    text-align: center;
-	    list-style: none;
-	    position: relative;
-	    font-size: 14px;
+		float: left;
+		width: 70px;
+		text-align: center;
+		list-style: none;
+		position: relative;
+	}
+	.setting ul li.menu a{
+		height: 72px;
+		background-repeat: no-repeat;
+		background-position: center;
+	}
+	.setting .menu a.message{
+		background-image: url("./img/message-icon.png")
+	}
+	.setting .menu a.setting{
+		background-image: url("./img/setting-icon.png")
+	}
+	.setting .menu a.log-out{
+		background-image: url("./img/logout-icon.png")
 	}
 	.setting ul li:hover .setting-icon{
-	    transform: rotateX(-180deg);
-	    -webkit-transform: rotateX(-180deg);
-	    -moz-transform: rotateX(-180deg);
-	    top: -2px;
-	    transition: all .5s ease;
-	    -webkit-transition: all .5s ease;
-	    -moz-transition: all .5s ease;
+		transform: rotateX(-180deg);
+		-webkit-transform: rotateX(-180deg);
+		-moz-transform: rotateX(-180deg);
+		top: -2px;
+		transition: all .5s ease;
+		-webkit-transition: all .5s ease;
+		-moz-transition: all .5s ease;
 	}
-	.setting .setting-icon{
-	    display: inline-block;
-	    width: 11px;
-	    height: 11px;
-	    background: url('../Index/img/icon.png') no-repeat -150px -140px;
-	    position: relative;
-	    left: 15px;
-	    top: 2px;
-	    transform: rotateX(0deg);
-	    -webkit-transform: rotateX(0deg);
-	    -moz-transform: rotateX(0deg);
-	    transition: all .3s ease;
-	    -webkit-transition: all .3s ease;
-	    -moz-transition: all .3s ease;
-	}
+
 	.setting ul li.menu a {
-	    color: #868f94;
-	    display: inline-block;
-	    width: 100%;
+		color: #868f94;
+		display: inline-block;
+		width: 100%;
 	}
 
 	.setting ul li a:hover {
-	    text-decoration: none;
+		text-decoration: none;
 	}
 
 	.setting .sub-menu {
-	    list-style: none;
-	    position: absolute;
-	    padding: 0;
-	    background: #fff;
-	    width: 120px;
-	    left: -20px;
-	    height: 120px;
-	    border-radius: 0 0 6px 6px;
-	    box-shadow: 0 0 10px #d4d4d4;
+		list-style: none;
+		position: absolute;
+		padding: 0;
+		background: #fff;
+		width: 120px;
+		left: -20px;
+		height: 120px;
+		border-radius: 0 0 6px 6px;
+		box-shadow: 0 0 10px #d4d4d4;
+		top: 70px;
 	}
 
 	.setting .sub-menu li {
-	    height: 60px;
-	    line-height: 60px;
+		height: 60px;
+		line-height: 60px;
 	}
-
 	.setting .sub-menu li:hover {
-	    opacity: .8;
+		opacity: .8;
+	}
+	.email-num{
+		position: absolute;
+		top: 20px;
+		left: 35px;
+		height: 15px;
+		width: 22px;
+		line-height: 14px;
+		background: #fb6c2e;
+		border-radius: 14px;
+		color: #fff;
+	}
+	.email-num span{
+		position: relative;
+    	left: -3px;
+	}
+	.email-num em{
+		font-style: normal;
+		position: relative;
+		top: -16px;
+		left: 7px;
 	}
 
 </style>
+<style>
+	.log-out-confirm{
+		width: 300px;
+		height:  200px;
+	}
+	.log-out-confirm .el-message-box__content{
+		padding: 40px 20px;
+	}
+	.log-out-confirm .el-button{
+		padding: 0;
+		height: 42px;
+		width: 120px;
+	}
+
+</style>
+
 <script>
 	import md5 from '@/utils/jquery.md5'
 	export default{
 		data(){
-
 			const checkPassWd = (rule, value, callback)=>{
 				if(value !== this.change.passwd){
 					callback(new Error('两次密码不一致！'));
@@ -208,7 +232,6 @@
 					callback();
 				}
 			}
-
 			return {
 				menu: false,
 				dialog: false,
@@ -217,6 +240,7 @@
 					passwd: '',
 					passwdCheck: ''
 				},
+				emailNum: 0,
 				rule: {
 					passwdOld: {
 						required: true,
@@ -236,6 +260,10 @@
                 },
 			}
 		},
+		
+		created(){
+			this.getEmailNum();
+		},
 		methods: {
 			showMenu(){
 				this.menu = true;
@@ -244,11 +272,42 @@
 				this.menu = false;	
 			},
 			logOut(){
-				Utils.logOut();
+
+				this.$confirm('您确定要退出登录吗?', '退出确认', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					customClass: 'log-out-confirm common-confirm',
+					type: 'warning'
+					}).then(() => {
+						Utils.logOut();
+					}).catch(() => {
+						
+				});
+			},
+
+			getEmailNum(){  //獲取郵箱唯獨數量
+				this.ajax({
+					url: '/authority/user/mail/toread',
+					success(data, $this){
+						if(data.code == 'success'){
+							$this.emailNum = data.content;
+						}
+					}
+				})
+			},
+			getEmailUrl(){   //获取邮箱信息
+				this.ajax({
+					url: '/authority/user/mail/login',
+					success(data, $this){
+						if(data.code == 'success'){
+							window.open(data.content);
+							$this.getEmailNum();
+						}
+					}
+				})
 			},
 			closeModal(){
 				this.dialog = false;
-
 			},
 			handleSubmit(name) {
                 this.$refs[name].validate((valid) => {

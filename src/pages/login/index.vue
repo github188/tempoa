@@ -4,17 +4,20 @@
 		    <form @keyup.enter="verify" >
 			    <div class="login-box">
 			    	<div class="logo"></div>
-			    	<div class="form-item">
-			    		 <i class="icon icon-user"></i>
-			             <input v-model.trim:username="username" id="username" type="text" placeholder="邮箱" autocomplete="off">
-						 <span>@ecaray.com</span>
+					<div class="login-msg" v-if="message">
+						<span class="error-icon"></span>
+						<span class="error-text">{{message}}</span>
+					</div>
+			    	<div class="form-item" style="margin-bottom:20px;">
+			             <input v-model.trim:username="username" id="username" type="text" placeholder="用户名" autocomplete="off">
 			    	</div>
 			    	<div class="form-item">
-			    		 <i class="icon icon-password"></i>
 			            <input v-model.trim:password="password" id="password" type="password" placeholder="密码" autocomplete="off">
 			    	</div>
-			    	<button type="button" class="btn btn-login" @click="verify">登录</button>
-			        <span class="login-msg">{{message}}</span>
+					<input type="checkbox" v-model="checkBox" name="rememberAccount" id="rememberAccount">
+					<label for="rememberAccount" class="remember-account" data-name="记住账号"></label>
+			    	<button type="button" :disabled="disabled" class="btn btn-login" v-if="disabled"><i class="el-icon-loading"></i></button>
+			    	<button type="button" :disabled="disabled" class="btn btn-login" @click="verify" v-else>登录</button>
 			    </div>
 			    <div class="bg-img"></div>
 		    </form>
@@ -61,44 +64,39 @@
 	    left: 50%;
 		margin-left: -500px;
 		margin-top: -280px;
-		/* margin-top: -280px; */
-	    /* -ms-transform: translate(-50%, -50%);
-	    -moz-transform: translate(-50%, -50%);
-	    -webkit-transform: translate(-50%, -50%);
-	    transform: translate(-50%, -50%); */
 	    box-shadow: 4px 4px 72px 4px #d8d8d8, -4px -4px 56px -1px #ffffff;
 	    overflow: hidden;
 	}
 	.login-box{
 		float: left;
-		width: 358px;
+		width: 400px;
 	}
 
 	.logo {
-		margin: 125px auto 72px auto;
-	    margin-top: 125px;
+		margin: 80px auto 60px auto;
 	    display: block;
-	    width: 222px;
-	    height: 25px;
-	    background: url(./img/login-icon.png) -10px -135px;
+		width: 204px;
+    	height: 60px;
+	    background: url(./img/logo.png);
 	}
 
 	.form-item{
-		width: 200px;
+		width: 260px;
+		height: 42px;
 		margin: 5px auto;		
-	    border-bottom: 1px solid #DDE1E4;
 		position: relative;
 	}
 	.form-item input{
-		border: 0;
-	    width: 160px;
+		border: 1px solid #ddd;
+	    width: 100%;
 	    padding: 0 8px;
-	    height: 36px;
+	    height: 42px;
 	    display: inline-block;
 	    vertical-align: middle;
-	    font-size: 16px;
+	    font-size: 14px;
 	    color: #40474d;
 	    box-sizing: border-box;
+		text-indent: 12px;
 	}
 	.form-item span{
 		position: absolute;
@@ -122,10 +120,9 @@
 	.form-item .icon-password{
 	    background-position:  -185px -34px;;
 	}
-
 	.btn-login {
-        width: 240px;
-	    height: 40px;
+        width: 260px;
+	    height: 42px;
 	    color: #fff;
 	    font-size: 16px;
 	    border-radius: 4px;
@@ -133,20 +130,11 @@
 	    display: block;
 	    padding: 0;
 	    margin: 0 auto;
-	    margin-top: 56px;
-	    background: url(./img/login-icon.png) -9px -73px;
+	    margin-top: 40px;
+	    background: url(./img/login-btn.png);
 	}
-	.login-msg {
-	    width: 100%;
-	    color: #FF5900;
-	    font-size: 14px;
-	    display: inline-block;
-        margin-left: 60px;
-		margin-top: 20px;
-	}
-
 	.bg-img{
-		width: 641px;
+		width: 600px;
 		height: 560px;
 		background: url('./img/bg.png');
 		float: right;
@@ -162,13 +150,64 @@
 		background-color: rgba(75, 86, 96, 0.5);
 	}
 
+	.login-msg {
+		width: 260px;
+		height: 40px;
+		line-height: 40px;
+		border: 1px solid #f65939;
+		-webkit-border-radius: 5px;
+		-moz-border-radius: 5px;
+		border-radius: 5px;
+		background: #ffe6e5;
+		color: #000;
+		margin: 0 auto;
+		margin-bottom: 20px;
+	}
+	.error-icon{
+		display: inline-block;
+		height: 16px;
+		width: 16px;
+		background: url("./img/error-icon.png");
+		margin-left: 20px;
+		margin-top: 12px;
+	}
+	.error-text{
+		position: relative;
+		top:-3px;
+	}
+	.remember-account{
+		height: 16px;
+		width: 100px;
+		display: block;
+		cursor: pointer;
+		background: url("./img/login-icon.png");
+		background-repeat: no-repeat;
+		background-position:  -153px -10px;
+		position: relative;
+		margin-left: 70px;
+	}
+	.remember-account:after{
+		content: attr(data-name);
+		position: absolute;
+		background: #fff;
+		left: 16px;
+		width: 100px;
+		padding-left: 6px;
+		top: -1px;
+		height: 24px;
+		color: #000;
+	}
+	#rememberAccount:checked + label{
+		background-position:  -153px -35px;
+	}
 	.footer {
 	    position: absolute;
 	    bottom: 0;
 	    left: 0;
 	    width: 100%;
+		height: 44px;
+		line-height: 44px;
 	}
-
 	.footer p {
 	    color: #eee;
 	    width: 100%;
@@ -179,7 +218,7 @@
 
 <script>
 	import md5 from '@/utils/jquery.md5'
-	import { setStore } from '@/utils/localStorage'
+	import { getStore, setStore, removeStore } from '@/utils/localStorage'
 	import * as types from '@/vuex/mutation-types'
 	export default {
 		name: 'login',
@@ -187,7 +226,15 @@
 			return {
 				username: undefined,
 				password: undefined,
-				message: ''
+				message: undefined,
+				checkBox: false,
+				disabled: false
+			}
+		},
+		mounted(){
+			this.username = getStore('username');
+			if(this.username){
+				this.checkBox = true;
 			}
 		},
 		methods: {
@@ -200,14 +247,18 @@
 					this.message = "请输入登录密码!";
 			        return false;
 			    }
+				if(this.checkBox){
+					setStore('username', this.username);
+				}else{
+					removeStore('username');
+				}
 			    this.doLogin();
 			},
 			doLogin(){
+				this.disabled = true;
 				const $this = this;
-
 				let username = this.username == 'admin'? this.username: this.username + '@ecaray.com';
-
-				this.ajax({
+				var s = this.ajax({
 					url: '/authority/account/login', 
 					data: {
 						username: username,
@@ -216,13 +267,13 @@
 					success(data){
 						var code = data.code;
 			            if (code == "success") {
-			            	console.log(data, '登录信息')
 			                $this.$store.commit({
 								type: types.LOG_IN,
 								content: data.content
 							});
 			                $this.$router.push('/index');
 			            } else {
+							$this.disabled = false;
 			               $this.message = data.message; 
 			            }
 					}
