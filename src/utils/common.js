@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import store from '@/vuex/'
+import { getStore } from '@/utils/localStorage'
 import { appHost, appRoot, avatar } from '@/config/config'
+
 const vm = new Vue();
 
 window.Utils = {
@@ -13,8 +15,9 @@ window.Utils = {
             });
         },
         getAvatar(data) {
+
             const { headPic, sex } = data;
-            if (headPic && headPic.split('.')[1] !== 'png' && headPic != '') {
+            if (headPic != '') {
                 return appHost + appRoot + avatar + headPic + '/download';
             }
             if (sex == 1) {
@@ -22,7 +25,9 @@ window.Utils = {
             } else {
                 return '/static/img/male-default.png';
             }
-
+        },
+        getValue(name) { //获取localshorage值
+            return getStore(name);
         },
         /**
          * 数组合并
@@ -92,6 +97,14 @@ window.Utils = {
             s = s.replace(/&quot;/g, "\"");
             s = s.replace(/<br>/g, "\n");
             return s;
+        },
+        /**
+         * 
+         * @param {过滤html标签} str 
+         */
+        filterHtmlTag(str) {
+            str = typeof str == 'string' ? str.replace(/<\/?[^>]*>/g, '') : str;
+            return str.trimAll();
         }
 
     }

@@ -18,7 +18,7 @@
 		</v-panel>
 
 		<v-panel>
-			<v-calendar ref="calendar" :month="form.month"></v-calendar>
+			<v-calendar ref="calendar"></v-calendar>
 		</v-panel>
 
 		<v-leave ref="leaveModal"></v-leave>
@@ -36,44 +36,78 @@
 	}
 </style>
 <script>
-import leave from './leave'   //请假
-import overtime from './overtime'  //加班
-import awayOffcial from './awayOfficial'  //出差
-import Calendar from '@/components/Calendar'  //日历考勤
-export default {
-	name: 'myAttendance',
-	components: {
-		'v-leave': leave,
-		'v-overtime': overtime,
-		'v-away': awayOffcial,
-		'v-calendar': Calendar
-	},
-	data() {
-		let date = new Date();
-		return {
-			pickerOptions: {
-				disabledDate(time) {
-					return time.getTime() > Date.now() - 8.64e7;
+	import leave from './leave'   //请假
+	import overtime from './overtime'  //加班
+	import awayOffcial from './awayOfficial'  //出差
+	import Calendar from '@/components/Calendar'  //日历考勤
+
+	export default {
+		name: 'myAttendance',
+		components: {
+			'v-leave': leave,
+			'v-overtime': overtime,
+			'v-away': awayOffcial,
+			'v-calendar': Calendar
+		},
+		data() {
+			let date = new Date();
+			let month = (date.getMonth() + 1).toString();
+			return {
+				pickerOptions: {
+					disabledDate(time) {
+						return time.getTime() > Date.now() - 8.64e7;
+					}
+				},
+				form: {
+					month: date.getFullYear() + '-' + (month.length == 1?'0'+month:month),
+					type: []
 				}
+			}
+		},
+		created(){
+			this.getType();
+		},
+		methods:{
+			getType(){
+                this.ajax({   //获取请假类型
+                    url: 'ctm/setting/param/list',
+                    data:{
+                        code: 'cwa_leave_type'
+                    },
+                    success(data, $this){
+                        if(data.code == 'success'){
+							$this.getData($this.form.month);
+							$this.form.type = data.content;
+                        }
+                    }
+                });
+            },
+			getData(month){
+				this.ajax({
+					url: '/cwa/attendance/list',
+					data:{
+						month: month,
+						userId: Utils.getValue('u')
+					},
+					success(data, $this){
+						if(data.code == 'success'){
+							$this.$refs.calendar.dateList(month,  data.content, $this.form.type);
+						}
+					}
+				})
 			},
-			form: {
-				month: date.getFullYear() + '-' + (date.getMonth() + 1)
+			openLeavel(){
+				this.$refs.leaveModal.openModal();
+			},
+			openOvertime(){
+				this.$refs.overtimeModal.openModal();
+			},
+			openAway(){
+				this.$refs.awayModal.openModal();
+			},
+			chooseMonth(val){
+				this.getData(val);
 			}
 		}
-	},
-	methods:{
-		openLeavel(){
-			this.$refs.leaveModal.openModal();
-		},
-		openOvertime(){
-			this.$refs.overtimeModal.openModal();
-		},
-		openAway(){
-			this.$refs.awayModal.openModal();
-		},
-		chooseMonth(val){
-			this.$refs.calendar.dateList(val);
-		}
 	}
-}
 </script>

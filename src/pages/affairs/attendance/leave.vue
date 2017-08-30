@@ -76,8 +76,10 @@
             </el-form>
 
             <span slot="footer" class="dialog-footer">
-                <el-button type="success" @click="submit">确 定</el-button>
+                <el-button type="success" :disabled="disabled" @click="submit" v-if="disabled"><i class="el-icon-loading"></i></el-button>
+                <el-button type="success" :disabled="disabled" @click="submit" v-else>确 定</el-button>
                 <el-button type="info" @click="modal = false">取 消</el-button>
+
             </span>
 
         </el-dialog>
@@ -100,6 +102,7 @@ export default {
                     return time.getTime() < this.form.startDate;
                 }
             },
+            disabled: false,
             modal: false,
             minTime(){
                 if( (this.form.startDate && this.form.startDate.getTime()) == (this.form.endDate && this.form.endDate.getTime())){  //如果是同一天
@@ -187,32 +190,44 @@ export default {
         },
         submit(){
             this.$refs.form.validate((valid)=>{
-                const params = {
-                    userId: this.$store.state.u,
-                    type: this.form.type,
-                    startTime: this.startDate,
-                    endTime: this.endDate,
-                    timeLength: this.form.timeLength,
-                    reason: this.form.reason
-                };
-                const agentId = this.form.agentId;
-                if(agentId){
-                    params.agentId = agentId;
-                }
-                this.ajax({
-                    url: '/cwa/leave/start',
-                    type: 'post',
-                    data: params,
-                    success(data, $this){
-                        if(data.code == 'success'){
-                            $this.$message({
-                                message: '操作成功！',
-                                type: 'success'
-                            });
-                            $this.modal = false;
-                        }
+                if(valid){
+                    this.disabled = true;
+                    const params = {
+                        userId: this.$store.state.u,
+                        type: this.form.type,
+                        startTime: this.startDate,
+                        endTime: this.endDate,
+                        timeLength: this.form.timeLength,
+                        reason: this.form.reason
+                    };
+                    const agentId = this.form.agentId;
+                    if(agentId){
+                        params.agentId = agentId;
                     }
-                })
+                    
+                    this.ajax({
+                        url: '/cwa/leave/start',
+                        type: 'post',
+                        data: params,
+                        success(data, $this){
+                            if(data.code == 'success'){
+                                $this.$message({
+                                    message: '操作成功！',
+                                    type: 'success'
+                                });
+                                $this.modal = false;
+                                $this.disabled = false;
+                                $this.$refs.form.resetFields();
+                            }else{
+                                $this.$message({
+                                    message: data.message,
+                                    type: 'warning'
+                                });
+                                $this.disabled = false;
+                            }
+                        }
+                    })
+                }
             })
         }
     }

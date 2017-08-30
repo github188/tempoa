@@ -32,7 +32,7 @@
                 	<div v-if="todoList.length">
 
 		        		<ul class="work-box">
-			        		<li v-for="item in todoList">
+			        		<li v-for="(item, index) in todoList" :key="index">
 			        			<el-row>
 			        				<router-link :to="{path: '/work/detail', query: {id: item.processId, type: item.type}}">
 				        				<p class="padding-b-10">{{item.title}}</p>
@@ -68,7 +68,7 @@
 		        	</div>
 
 		        	<p style="margin-top: 130px; text-align:center" v-else>
-                        暂无数据！
+                        勤劳如您，一个待办都木有，点赞！
                     </p>
                 </el-tab-pane>
                 <el-tab-pane name="done">
@@ -76,7 +76,7 @@
                  	<div v-if="doneList.length">
 
 		        		<ul class="work-box">
-			        		<li v-for="item in doneList">
+			        		<li v-for="(item, index) in doneList" :key="index">
 			        			<el-row>
 			        				<router-link :to="{path: '/work/detail', query: {id: item.processId, type: item.type}}">
 				        				<p class="padding-b-10">{{item.title}}</p>
@@ -112,14 +112,14 @@
 		        	</div>
 
                     <p style="margin-top: 130px; text-align:center" v-else>
-                        暂无数据！
+                        四大皆空，已办也空。
                     </p>
                 </el-tab-pane>
                 <el-tab-pane name="myapply">
              		<span slot="label"><i class="icon icon-myapply"></i> 我申请的</span>
 		        	<div v-if="applyList.length">
 		        		<ul class="work-box">
-			        		<li v-for="item in applyList">
+			        		<li v-for="(item, index) in applyList" :key="index">
 			        			<el-row>
 			        				<router-link :to="{path: '/work/detail', query: {id: item.id, type: item.type, nodeId: item.nodeId}}">
 				        				<p class="padding-b-10">{{item.title}}</p>
@@ -154,9 +154,8 @@
 						</el-pagination>
 		        	</div>
 
-		        	
                     <p style="margin-top: 130px; text-align:center" v-else>
-                        暂无数据！
+                        您还没有发起过任何申请，此处空空如也。
                     </p>
                 </el-tab-pane>
             </el-tabs>
@@ -287,8 +286,9 @@
 	    border: 1px solid #01cd78;
 	}
 	.work-order .el-pager li:hover, .work-order .el-pagination button:hover{
-		color: #01cd78;
+		color: #01cd78 !important;
 	}
+	
 </style>
 <script>
 	import Code from '@/components/getCode'

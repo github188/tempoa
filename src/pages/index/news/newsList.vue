@@ -4,24 +4,58 @@
 		<div class="content">
 	     	<el-breadcrumb separator="/">
 			  <el-breadcrumb-item :to="{ path: '/index' }">首页</el-breadcrumb-item>
-			  <el-breadcrumb-item>新闻公告</el-breadcrumb-item>
+			  <el-breadcrumb-item>{{title}}</el-breadcrumb-item>
 			</el-breadcrumb>
 
 		    <div class="news-content">
 		
 			    <el-tabs v-model="activeTab" @tab-click="loadList" class="news-list-tab" type="card">
+
+					 <el-tab-pane name="all">
+                		<span slot="label"><i class="icon icon-all"></i> 全部</span>
+	                	<div v-if="all.length">
+			        		<ul class="news-box">
+				        		<li v-for="(item, index) in all" :key="index">
+				        			<p>
+				        				<router-link class="news-title" :to="{ path: '/news/detail', query: {id: item.id}}">{{item.newsTitle}}</router-link>
+				        			</p>
+				        			<p class="news-time">
+										{{new Date(item.publishDate).toString()}}
+										<span style="padding-left: 10px;">撰稿人：{{ item.newsAuthor}}</span>
+										<span class="comments-num">{{item.commentCount}}</span>
+									</p>
+				        			<p class="news-abstract">{{item.content | getContent}}</p>
+				        			<p>
+			        					<router-link class="read-more" :to="{ path: '/news/detail', query: {id: item.id}}">查看全文></router-link>
+				        			</p>
+				        		</li>
+				        	</ul>
+			        	</div>
+
+			        	<p style="margin-top: 130px; text-align:center" v-else>
+	                        暂无数据！
+	                    </p>
+	                </el-tab-pane>
+
+
 	                <el-tab-pane name="news">
-                		<span slot="label"><i class="icon icon-news"></i> 公司新闻</span>
+                		<span slot="label"><i class="icon icon-news"></i> 新闻</span>
 	                	<div v-if="newsList.length">
 			        		<ul class="news-box">
 				        		<li v-for="(item, index) in newsList" :key="index">
 				        			<p>
 				        				<router-link class="news-title" :to="{ path: '/news/detail', query: {id: item.id}}">{{item.newsTitle}}</router-link>
 				        			</p>
-				        			<p class="news-time">{{new Date(item.addTime).toString()}}</p>
+				        			
+									<p class="news-time">
+										{{new Date(item.publishDate).toString()}}
+										<span style="padding-left: 10px;">撰稿人：{{ item.newsAuthor}}</span>
+										<span class="comments-num">{{item.commentCount}}</span>
+									</p>
+
 				        			<p class="news-abstract">{{item.content | getContent}}</p>
 				        			<p>
-			        					<router-link class="read-more" :to="{ path: '/news/detail', query: {id: item.id}}">查看更多...</router-link>
+			        					<router-link class="read-more" :to="{ path: '/news/detail', query: {id: item.id}}">查看全文></router-link>
 				        			</p>
 				        		</li>
 				        	</ul>
@@ -33,17 +67,22 @@
 	                </el-tab-pane>
 
 	                <el-tab-pane name="notice">
-	                	<span slot="label"><i class="icon icon-notice"></i> 通知公告</span>
+	                	<span slot="label"><i class="icon icon-notice"></i> 公告</span>
 	                	<div v-if="noticeList.length">
 			        		<ul class="news-box">
 				        		<li v-for="(item, index) in noticeList" :key="index">
 				        			<p>
 				        				<router-link class="news-title" :to="{ path: '/news/detail', query: {id: item.id}}">{{item.newsTitle}}</router-link>
 				        			</p>
-				        			<p class="news-time">{{new Date(item.addTime).toString()}}</p>
+				        			<p class="news-time">
+										{{new Date(item.publishDate).toString()}}
+										<span style="padding-left: 10px;">撰稿人：{{ item.newsAuthor}}</span>
+										<span class="comments-num">{{item.commentCount}}</span>
+									</p>
+
 				        			<p class="news-abstract">{{item.content | getContent}}</p>
 				        			<p>
-			        					<router-link class="read-more" :to="{ path: '/news/detail', query: {id: item.id}}">查看更多...</router-link>
+			        					<router-link class="read-more" :to="{ path: '/news/detail', query: {id: item.id}}">查看全文></router-link>
 				        			</p>
 				        		</li>
 				        	</ul>
@@ -76,7 +115,8 @@
 	.news-box li{		
 	    margin-bottom: 42px;
     	border-bottom: 1px solid #E6E9EB;
-    	height: 190px;
+		height: 190px;
+		position: relative;
 	}
 	.news-box li p a.news-title{	
 	    font-size: 20px;
@@ -92,45 +132,63 @@
 	    margin-top: 8px;
 	}
 	.news-box li p.news-abstract{
-	    color: #2F313A;
-	    font-size: 14px;
-	    margin-top: 25px;
-	    margin-bottom: 24px;
-	    position: relative;
-	    line-height: 24px;
-	    height: 48px;
-	    white-space: normal;
-	    text-overflow: ellipsis;
-	    display: -webkit-box;
-	    -webkit-line-clamp: 2;
-	    -webkit-box-orient: vertical;
-	    overflow: hidden;
+	   color: #2F313A;
+		font-size: 14px;
+		margin-top: 25px;
+		margin-bottom: 24px;
+		position: relative;
+		line-height: 30px;
+		white-space: normal;
+		text-overflow: ellipsis;
 	}
 	.news-box li p a.read-more{
+		background: #fff;
+		padding: 0 10px;
+		z-index: 5;
+		cursor: pointer;
 		color: #01cd78;
+		position: absolute;
+		width: 90px;
+		right: 0;
+		top: 140px;
+	}
+	.comments-num{
 		float: right;
+		height: 20px;
+		width: 25px;
+		background: #fff url('./img/icon.png') -336px -10px;
+		display: block;
+		padding-left: 28px;
+		margin-right: 16px;
 	}
 	i.icon{
 		display: inline-block;
 		width: 22px;
-		height: 18px;
+		height: 22px;
 		background-image: url('./img/icon.png');
 		background-repeat: no-repeat;
 		position: relative;
-		top: 2px;
-		padding-right: 30px;
+		top: 7px;
+		padding-right: 38px;
 	}
+	i.icon.icon-all{
+		background-position: -200px -31px;
+	}
+	.is-active i.icon.icon-all{
+		background-position: -200px -6px;	
+	}
+
 	i.icon.icon-news{
-		background-position: 0 -26px;
+		background-position: -32px -33px;
 	}
 	.is-active i.icon.icon-news{
-		background-position: 0 0;	
+		background-position: -32px -6px;	
 	}
 	i.icon.icon-notice{
-		background-position: -30px -26px;
+		background-position: 0 -34px;
 	}
 	.is-active i.icon.icon-notice{
-		background-position: -30px 0;	
+		background-position: 0 -8px;	
 	}
 </style>
 <style>
@@ -168,13 +226,15 @@
 		name: 'newsList',
 		data(){
 			return {
-				newsList: [],
-				noticeList: [],
-				activeTab: 'news'
+				newsList: [], //新闻
+				noticeList: [], //公告
+				all: [],   //全部
+				activeTab: 'all',
+				title: '全部'
 			}
 		},
 		created(){
-			this.loadList('0');  //默认加载公告
+			this.loadList(3);  //默认加载全部
 		},
 		filters: {
 			getContent(value){
@@ -185,26 +245,37 @@
 		},
 		methods: {
 			loadList(tab){
+
 				if(typeof tab == 'string'){
 					var index = tab;
 				}else{
 					var { index } =  tab;
 				}
 
+				let params = {
+					pageNum:1,
+					pageSize:5,
+					isPublish:0
+				}
+
+				if(index == '1' || index == '2'){ //0-新闻， 1-资讯
+					params.newsType = index - 1;
+				}
+
 				this.ajax({
 					url: '/news/common/list',
-					data:{
-						newsType: index, //0-新闻， 1-资讯
-						pageNum:1,
-						pageSize:5,
-						isPublish:0
-					},
+					data:params,
 					success(data, $this){
 						if(data.code == 'success'){
-							if(index == '0'){
+							if(index == '1'){
 								$this.newsList = data.content;
-							}else if(index == '1'){
+								$this.title = "新闻";
+							}else if(index == '2'){
 								$this.noticeList = data.content;
+								$this.title = "公告";
+							}else{
+								$this.all = data.content;
+								$this.title = "全部";
 							}
 						}
 					}

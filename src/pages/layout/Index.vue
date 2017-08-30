@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="module-content">
 		<v-header></v-header>
 		<input class="z-hide" type="checkbox" id="toggleMenu">
 		<div class="wrap">
@@ -18,14 +18,22 @@
 	.wrap{
 		padding-left: 230px;
 	}
-
+	
 	#toggleMenu:checked+.wrap{
 		padding-left: 50px;
 	}
 </style>
+<style>
+	.module-content .header-box{
+		max-width: 100% !important;
+	}
+	.module-content .logo{
+		width: 230px !important;
+	}
+</style>
 <script>
 	import { setStore } from '@/utils/localStorage'
-	import Header from './Header'
+	import Header from '@/pages/index/header'
 	import Side from './Side'
 	import components from '@/components/'  //获取注册的全局组件
 	

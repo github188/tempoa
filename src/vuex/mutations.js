@@ -13,7 +13,9 @@ export default {
         state.realname = realname;
     },
     [types.LOG_OUT](state) {
-        window.localStorage.clear();
+        removeStore('authorization');
+        removeStore('realname');
+        removeStore('u');
         state.authorization = null;
         state.u = null;
         state.realname = null;
