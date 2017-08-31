@@ -35,7 +35,7 @@
 				<div class="entry-menu">
 					<ul>
 						<li v-for="(item, index) in menuList" :key="index">
-							<router-link target="_blank" :to="{name:'affairs', params:{id: item.id, name: item.name}}">
+							<router-link :to="{name:'affairsContact', params:{id: item.id, name: item.name}}">
 								<em class="icon" :class="item.icon"></em>
 								<span>{{item.name}}</span>
 								<em class="icon-cell"></em>
@@ -115,11 +115,7 @@
 						</ul>
 					</div>
 					<div class="person-info box">
-<<<<<<< HEAD
 						<router-link target="_blank" to="/person" title="查看个人信息">
-=======
-						<router-link to="/person" title="查看个人信息">
->>>>>>> 2ef3a2ab31e917f6228a46761675f98d57e1cf90
 							<img :alt="personInfo.realname" :src="avatar">
 						</router-link>
 						<p class="person-name">{{personInfo.realname}}</p>
@@ -177,7 +173,6 @@
                         <a target="_blank" href="/news/list">更多</a>
                     </p>
                     <div class="public-news-content">
-<<<<<<< HEAD
 
 							<template v-if="stickNews">
 								<router-link target="_blank" :to="'/news/detail/?id=' + stickNews.id">
@@ -194,29 +189,12 @@
 									</div>
 								</router-link>	
 							</template>
-=======
-                            <img id="public-news-img" alt="" src="skins/img/news-default.png">
-                            <div class="top-line">
-                                <h2 class="top-line-title" id="topPublic">
-									<span class="top-line-tag top-line-tag-news" v-if="stickNews.newsType == 0">新闻</span>
-									<span class="top-line-tag top-line-tag-publish" v-if="stickNews.newsType == 1">公告</span>
-									<router-link :to="'/news/detail/?id=' + stickNews.id">{{stickNews.newsTitle}}</router-link>								
-									<em class="tag-icon tag-icon-top">Top</em>
-									<span class="top-line-time" style="margin-top: 0;"> 2017-08-28 13:59:58</span>
-								</h2>
-                                <p id="topPublicContent" class="top-line-content">{{stickNews.content | getContent}}</p>
-                            </div>
->>>>>>> 2ef3a2ab31e917f6228a46761675f98d57e1cf90
                         
                         <ul id="topNews" class="top-line-list">
 							<li class="top-line-title" v-for="(item, index) in topNews" :key="index">
 								<span class="top-line-tag top-line-tag-news" v-if="item.newsType == 0">新闻</span>
 								<span class="top-line-tag top-line-tag-publish" v-if="item.newsType == 1">公告</span>
-<<<<<<< HEAD
 								<router-link target="_blank" :to="'/news/detail/?id=' + item.id">{{item.newsTitle}}</router-link>
-=======
-								<router-link :to="'/news/detail/?id=' + item.id">{{item.newsTitle}}</router-link>
->>>>>>> 2ef3a2ab31e917f6228a46761675f98d57e1cf90
 								<em class="tag-icon tag-icon-new" v-if="restTime(item.publishDate)">New</em>
 								<span class="top-line-time"> {{new Date(item.publishDate).toString()}}</span>
 							</li>
@@ -900,10 +878,6 @@
 	color: #979797;
 	font-size: 12px;
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> 2ef3a2ab31e917f6228a46761675f98d57e1cf90
 .tag-icon {
     font-size: 12px;
     font-style: normal;
@@ -1458,7 +1432,6 @@ export default {
 			}
 			return false;
 		}
-<<<<<<< HEAD
 	},
 	mounted(){
 		$('#honourBox li').on('mouseover', function(){
@@ -1469,8 +1442,6 @@ export default {
 			$('.honour-synopsis').stop().fadeOut(100);
 			$(this).find('.person-honour-dpart').css('color', 'rgba(1, 1, 1, .8)');
 		});
-=======
->>>>>>> 2ef3a2ab31e917f6228a46761675f98d57e1cf90
 	}
 }
 </script>

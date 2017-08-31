@@ -219,6 +219,10 @@ select {
     text-align: right;
 }
 
+.pull-right {
+    float: right;
+}
+
 ::-webkit-scrollbar {
     width: 5px;
     height: 5px;

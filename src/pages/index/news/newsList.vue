@@ -25,9 +25,7 @@
 										<span class="comments-num">{{item.commentCount}}</span>
 									</p>
 				        			<p class="news-abstract">{{item.content | getContent}}</p>
-				        			<p>
-			        					<router-link class="read-more" :to="{ path: '/news/detail', query: {id: item.id}}">查看全文></router-link>
-				        			</p>
+									<router-link class="read-more" :to="{ path: '/news/detail', query: {id: item.id}}">查看全文></router-link>
 				        		</li>
 				        	</ul>
 			        	</div>
@@ -54,9 +52,7 @@
 									</p>
 
 				        			<p class="news-abstract">{{item.content | getContent}}</p>
-				        			<p>
-			        					<router-link class="read-more" :to="{ path: '/news/detail', query: {id: item.id}}">查看全文></router-link>
-				        			</p>
+									<router-link class="read-more" :to="{ path: '/news/detail', query: {id: item.id}}">查看全文></router-link>
 				        		</li>
 				        	</ul>
 			        	</div>
@@ -81,9 +77,7 @@
 									</p>
 
 				        			<p class="news-abstract">{{item.content | getContent}}</p>
-				        			<p>
-			        					<router-link class="read-more" :to="{ path: '/news/detail', query: {id: item.id}}">查看全文></router-link>
-				        			</p>
+									<router-link class="read-more" :to="{ path: '/news/detail', query: {id: item.id}}">查看全文></router-link>
 				        		</li>
 				        	</ul>
 			        	</div>
@@ -115,7 +109,6 @@
 	.news-box li{		
 	    margin-bottom: 42px;
     	border-bottom: 1px solid #E6E9EB;
-		height: 190px;
 		position: relative;
 	}
 	.news-box li p a.news-title{	
@@ -141,16 +134,15 @@
 		white-space: normal;
 		text-overflow: ellipsis;
 	}
-	.news-box li p a.read-more{
+	.news-box li a.read-more{
 		background: #fff;
 		padding: 0 10px;
 		z-index: 5;
 		cursor: pointer;
 		color: #01cd78;
-		position: absolute;
 		width: 90px;
-		right: 0;
-		top: 140px;
+		float: right;
+		margin-top: -45px;
 	}
 	.comments-num{
 		float: right;
@@ -234,8 +226,20 @@
 			}
 		},
 		created(){
-			this.loadList(3);  //默认加载全部
+			const type = this.$route.query.type;
+
+			if(type == 0){
+				this.activeTab = 'news';
+				this.loadList('1');
+			}else if(type == 1){
+				this.loadList('2');
+				this.activeTab = 'notice';
+			}else{
+				this.loadList('3');
+			}
+			
 		},
+	
 		filters: {
 			getContent(value){
 				if(value){
@@ -245,7 +249,6 @@
 		},
 		methods: {
 			loadList(tab){
-
 				if(typeof tab == 'string'){
 					var index = tab;
 				}else{
@@ -261,6 +264,7 @@
 				if(index == '1' || index == '2'){ //0-新闻， 1-资讯
 					params.newsType = index - 1;
 				}
+
 
 				this.ajax({
 					url: '/news/common/list',

@@ -4,6 +4,8 @@ import ModulePage from '@/pages/layout/' //功能模块入口
 
 import PersonInfo from '@/pages/index/person/' //个人信息
 
+import Trends from '@/pages/trends/' //OA首页管理
+
 import Project from '@/pages/project/' //项目管理入口
 import ProjectManage from '@/pages/project/manage/projectManage' //项目管理页面
 import DemandManage from '@/pages/project/demand/demandManage' //项目管理页面
@@ -11,6 +13,7 @@ import DemandManage from '@/pages/project/demand/demandManage' //项目管理页
 import Attendance from '@/pages/attendance/' //考勤管理入口
 import AttendanceReport from '@/pages/attendance/report/' //考勤报表
 import AttendanceSetting from '@/pages/attendance/setting/' //考勤设置
+import AttendanceDepartmentReport from '@/pages/attendance/department/' //部门考勤报表
 
 import Affairs from '@/pages/affairs/' //人事平台入口
 import AffairsContact from '@/pages/affairs/contacts/' //通讯录
@@ -32,6 +35,7 @@ import OrganizeMenu from '@/pages/organize/menu/' //菜单管理
 export {
     Login,
     Index,
+    Trends,
     PersonInfo,
     ModulePage,
     Project,
@@ -45,6 +49,7 @@ export {
     WorkDetail,
     Attendance,
     AttendanceReport,
+    AttendanceDepartmentReport,
     AttendanceSetting,
     Affairs,
     AffairsContact,

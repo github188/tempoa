@@ -22,7 +22,7 @@
 		</v-panel>
 		<v-panel>
 			<div id="tableList">
-				<p class="search-tips">请输入员工信息以查询！</p>
+				<p class="search-tips">想要协作找不到人? 搜索一下马上找到ta!</p>
 			</div>
 		</v-panel>
 	</div>
@@ -51,10 +51,10 @@
 				const data = Utils.filterObjectNull(this.form);  //过滤值为空的对象
 				console.log(Object.keys(data), 'data');
 				if(Object.keys(data).length == 0){
-					this.$message.error({
+					this.$message({
 			            message: '查询字段不能为空！',
 			            duration: 3000,
-			            type: 'error',
+			            type: 'warning',
 			            showClose: true
 			        });
 			        return;
@@ -70,6 +70,15 @@
 					},{
 						name: '电话',
 						value: 'phone'
+					},{
+						name: '邮箱',
+						value: 'email'
+					},{
+						name: '部门',
+						value: 'depName'
+					},{
+						name: '岗位',
+						value: 'post'
 					},{
 						name: '常驻地',
 						value: 'address'

@@ -3,14 +3,14 @@
 	<el-table @select-all="selectAll" ref="tableList" @select="select" :empty-text="status" :data="data" :border="true" style="width: 100%">
 		<el-table-column type="selection" v-if="checkbox"></el-table-column>
 		<template v-for="(item, index) in columns">
-	      <el-table-column align="center" v-if="item.operator" :key="item" :label="item.name" :width="item.width">
+	      <el-table-column align="center" v-if="item.operator" :key="index" :label="item.name" :width="item.width">
 	  		<template scope="scope">
 	  			<a @click="label.click(scope.row, scope)" class="operator" href="javascript:;" v-for="(label, key) in item.operator(scope.row)" :data-key="key" :key="key">{{label.name}}</a>
 	  		</template>
 	      </el-table-column>
 
 	       <el-table-column v-else 
-		   :key="item"
+		   :key="index"
 	   		show-overflow-tooltip 
 	   		:formatter="item.render" 
 	   		:align="item.align || 'center'" 

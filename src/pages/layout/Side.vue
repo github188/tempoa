@@ -1,19 +1,32 @@
 <template>
 	<div class="side-menu">
 		<a class="side-toggle" href="javascript:;">
-			<label for="toggleMenu" id="toggleMenuLabel">
-				<!-- <Icon type="navicon-round"></Icon> -->
-			</label>
+			<label for="toggleMenu" id="toggleMenuLabel"></label>
 		</a>
 
 		<ul class="menu-list">
-			<li v-for="(item, index) in menuList" :class="{'active':!index}">
-				<!-- <router-link :to="item.url"> -->
-				<router-link to="/project/projectManage">
-					<!-- <Icon type="ios-cloud-outline"></Icon> -->
+			<!-- <li v-for="(item, index) in menuList" :key="index">
+				<router-link to="/attendance/department">
 					<span>{{item.name}}</span>
 				</router-link>
+			</li> -->
+
+			<li @click="setParams(1501039773776563)">
+				<router-link to="/attendance/report">
+					<span>考勤报表</span>
+				</router-link>
 			</li>
+			<li @click="setParams(1501039889775823)">
+				<router-link to="/attendance/setting">
+					<span>考勤设置</span>
+				</router-link>
+			</li>
+			<li @click="setParams(1502696529259506)">
+				<router-link to="/attendance/department">
+					<span>部门考勤</span>
+				</router-link>
+			</li>
+
 		</ul>
 	</div>
 </template>
@@ -30,16 +43,15 @@
 	}
 	.side-toggle{
 		display: block;
-		width: 100%;
+		width: 36px;
+		margin:0 auto;
 		height: 36px;
 		line-height: 36px;
 		text-align: center;
-		border-bottom: 1px solid #eee;
 		color: #90929c;
 		font-size: 22px;
 	}
 	.menu-list li{
-		border-left: 4px solid transparent;
 		font-size: 16px;
 		transition: background 180ms ease;
 	}
@@ -60,16 +72,18 @@
     	transition: all 250ms ease-in-out;
     	color: #555;
 	}
-	.menu-list li.active a{
+	.menu-list li a.router-link-active{
 		color: #01cd78;
-	}
-	.menu-list li.active{
-	    background: #f2f2f2;
-    	border-left-color: #01cd78;
+		background: #f2f2f2;
+		border-left-color: #01cd78;
+		border-left: 4px solid #01cd78;
 	}
 	#toggleMenuLabel{
 		cursor: pointer;
 		display: block;
+		height: 35px;
+		width: 16px;
+		background: url('./img/menu.png') center no-repeat;
 	}
 	#toggleMenu:checked+.wrap .side-menu{
 		width: 50px;
@@ -79,14 +93,24 @@
 		padding-left: 13px;
 		transition: all 250ms ease-in-out;
 	}
+	.el-icon-menu{
+		font-size: 16px;
+	}
 </style>
 <script>
-	import { getStore } from '@/utils/localStorage'
+	import { getStore, setStore } from '@/utils/localStorage'
 	export default {
 		name: 'side',
 		data(){
 			return {
 				menuList: []
+			}
+		},
+		methods: {
+			setParams(id){
+				setStore('subMenuParams', {
+					id: id
+				});
 			}
 		},
 		created(){
@@ -96,6 +120,7 @@
 				success(data, $this){
 					console.log(data, '获取菜单');
 					if(data.code == 'success'){
+						console.log(data.content,1231)
 						$this.menuList = data.content;
 					}else{
 						this.$message({
@@ -106,7 +131,6 @@
 								$this.$router.push('/login')		
 							}
 				        });
-						
 					}
 				}
 			});

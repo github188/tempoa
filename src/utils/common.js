@@ -14,8 +14,10 @@ window.Utils = {
                 type: 'LOG_OUT'
             });
         },
+        /**
+         * 获取用户头像
+         */
         getAvatar(data) {
-
             const { headPic, sex } = data;
             if (headPic != '') {
                 return appHost + appRoot + avatar + headPic + '/download';
@@ -25,6 +27,34 @@ window.Utils = {
             } else {
                 return '/static/img/male-default.png';
             }
+        },
+        getButton(call) {
+            vm.ajax({
+                url: '/authority/resource/user/resources',
+                data: {
+                    resourceId: JSON.parse(getStore('subMenuParams')).id
+                },
+                success(data) {
+                    if (data.code == 'success') {
+                        call(data.content)
+                    }
+                }
+            });
+        },
+        /**
+         * 
+         * @param {*} url 
+         * @param {*查询的参数条件} object 
+         */
+        exportReport(url, object) {
+            let params = '';
+            for (let i in object) {
+                if (object[i] !== '' && object[i] !== null) {
+                    params += i + '=' + object[i] + '&'
+                }
+            }
+            window.open(appHost + appRoot + url + '?' + params + 'authorization=' + Utils.getValue('authorization') + '&userId=' + Utils.getValue('u'));
+
         },
         getValue(name) { //获取localshorage值
             return getStore(name);

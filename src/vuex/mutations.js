@@ -19,6 +19,6 @@ export default {
         state.authorization = null;
         state.u = null;
         state.realname = null;
-        router.push('/login');
+        router.push('/');
     }
 }

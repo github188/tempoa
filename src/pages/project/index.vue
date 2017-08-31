@@ -8,7 +8,7 @@
 	export default {
 		name: 'project',
 		mounted(){
-			this.$router.push('/project/projectManage');
+			// this.$router.push('/project/projectManage');
 		}
 	}
 </script>

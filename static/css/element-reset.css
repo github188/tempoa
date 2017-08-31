@@ -168,14 +168,16 @@ a:hover {
 .el-checkbox__input.is-checked .el-checkbox__inner,
 .el-checkbox__input.is-indeterminate .el-checkbox__inner,
 .el-button--primary,
-.el-button--primary:hover {
+.el-button--primary:hover,
+.el-radio__input.is-checked .el-radio__inner {
     background-color: #01cd78;
     border-color: #01cd78;
 }
 
 .el-checkbox__inner:hover,
 .el-checkbox__inner.is-focus .el-checkbox__inner,
-.el-textarea__inner:focus {
+.el-textarea__inner:focus,
+.el-radio__inner:hover {
     border-color: #01cd78;
 }
 

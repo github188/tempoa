@@ -97,12 +97,12 @@
            </li>
        </ul>
 
-       <el-dialog title="修改考勤记录" :visible.sync="modal" size="tiny">
+       <el-dialog title="修改考勤记录" :visible.sync="modal" size="tiny" class="edit-calendar-modal" @close="closeModal" :modal="false">
             <el-form ref="form" :model="form" :rules="rules" label-width="100px" label-position="right">
                 <el-form-item label="状态：" prop="type">
                     <v-affairs @change="getAffairs"></v-affairs>
-                    <span :class="[form.day == 0? 'error': '']" v-if="form.type == 4" style="padding-left: 10px">剩余年休假 {{form.day}} 天</span>
-                    <span :class="[form.day == 0? 'error': '']" v-if="form.type == 5" style="padding-left: 10px">剩余调休假 {{form.day}} 天</span>
+                    <span :class="[day == 0? 'error': '']" v-if="form.type == 4" style="padding-left: 10px">剩余年休假 {{day}} 天</span>
+                    <span :class="[day == 0? 'error': '']" v-if="form.type == 5" style="padding-left: 10px">剩余调休假 {{day}} 天</span>
                 </el-form-item>
 
                 <el-form-item label="时长：" prop="time">
@@ -253,6 +253,12 @@
         z-index: 100;
     }
 </style>
+<style>
+    .edit-calendar-modal .el-dialog{
+        width: 600px;
+        height: 380px;
+    }
+</style>
 
 <script>
     export default{
@@ -262,16 +268,17 @@
                 week: ['日', '一', '二', '三', '四', '五', '六'],
                 date: [],
                 type: [],
-                edit: false,
                 modal: false,
                 disabled: false,
+                day: '',  //假期剩余天数
                 form: {
                     reason: '',
-                    day: '',  //假期剩余天数
-                    type: '', //修改类型
+                    type: '1', //修改类型
                     time: '',  //时长
                     userId: '',  //用户id
-                    typeName: ''
+                    typeName: '',
+                    id: '',  
+                    date: ''  //修改的那一天
                 },
                 rules: {
                     type:[{
@@ -290,6 +297,7 @@
                 }
             }
         },
+        props: ['edit'],
         methods: {
             getType(){
                 this.ajax({   //获取请假类型
@@ -309,25 +317,45 @@
 
            getAffairs(obj){  //获取请假类型
                 this.form.type = obj.value;
-                this.form.day = obj.day;
+                this.form.typeName = obj.name;
+                this.day = obj.day;
             },
 
-            editHandel(day, id){
+            editHandel(id, date){
                 this.modal = true;
-                console.log(day, id);
+                this.form.id = id;
+                this.form.date = date;
             },
-            submit(){
-
+            submit(){   //修改考勤记录
                 this.$refs.form.validate((valid)=>{
                     if(valid){
                         this.disabled = true;
-                        console.log(this.form)
+                        this.ajax({
+                            url: '/cwa/attendance/update',
+                            type: 'put',
+                            data: Utils.filterObjectNull(this.form),
+                            success(data, $this){
+                                if(data.code == 'success'){
+                                    $this.$message({
+                                        type: 'success',
+                                        message: '修改成功！'
+                                    });
+                                    $this.modal = false;
+                                }else{
+                                    $this.$message({
+                                        type: 'error',
+                                        message: data.message
+                                    })
+                                }
+                                $this.disabled = false;
+                            }
+                        })
                     }
                 })
-
             },
-            dateList (month, data, type) {
+            dateList (month, data, type, id) {
                 this.date = [];
+                this.form.userId = id;
                 if(!month){
                     return;
                 }
@@ -479,9 +507,11 @@
                     this.date.push(dayInfo);
                     
                 }
-
-                console.log(this.date)
-            }     
+            },
+            closeModal(){
+                this.$refs.form.resetFields();
+                this.disabled = false;
+            }
         }
     }
 

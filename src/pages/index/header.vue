@@ -1,4 +1,4 @@
-			<template>
+<template>
 	<header class="header">
         <div class="header-box">
             <a href="/index" class="logo" title="亿车科技OA系统首页">
@@ -13,7 +13,7 @@
 			<div class="setting">
  				<ul>
                     <li class="menu">
-                        <a title="邮箱" @click="getEmailUrl" class="message" href="javascript:;"></a>
+                        <a title="邮箱" target="_blank" @click="getEmailUrl" class="message" :href="emailUrl"></a>
 						<template v-if="(emailNum > 1)">
 							 <div class="email-num" v-if="(emailNum > 99)">
 								<span>99</span>
@@ -241,6 +241,7 @@
 					passwdCheck: ''
 				},
 				emailNum: 0,
+				emailUrl: '',
 				rule: {
 					passwdOld: {
 						required: true,
@@ -263,6 +264,7 @@
 		
 		created(){
 			this.getEmailNum();
+			this.getEmailUrl();
 		},
 		methods: {
 			showMenu(){
@@ -300,7 +302,7 @@
 					url: '/authority/user/mail/login',
 					success(data, $this){
 						if(data.code == 'success'){
-							window.open(data.content);
+							$this.emailUrl = data.content;
 							$this.getEmailNum();
 						}
 					}

@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import store from '@/vuex/'
 import common from '@/utils/common'
 
-import { Login, Index, PersonInfo, ModulePage, Project, ProjectManage, DemandManage, NewsIndex, NewsList, NewsDetail, WorkIndex, WorkList, WorkDetail, Attendance, AttendanceReport, AttendanceSetting, Affairs, AffairsContact, AffairsAttendance, Organize, OrganizePerson, OrganizeRole, OrganizeMenu } from './index'
+import { Login, Index, Trends, PersonInfo, ModulePage, Project, ProjectManage, DemandManage, NewsIndex, NewsList, NewsDetail, WorkIndex, WorkList, WorkDetail, Attendance, AttendanceReport, AttendanceDepartmentReport, AttendanceSetting, Affairs, AffairsContact, AffairsAttendance, Organize, OrganizePerson, OrganizeRole, OrganizeMenu } from './index'
 
 Vue.use(Router)
 
@@ -18,8 +18,12 @@ let attendanceManage = [{ //考勤管理模块
     name: 'setting',
     component: AttendanceSetting,
     meta: { title: '考勤设置' },
+}, {
+    path: 'department',
+    name: 'department',
+    component: AttendanceDepartmentReport,
+    meta: { title: '部门考勤报表' },
 }];
-
 
 let organizeManage = [{ //组织架构管理模块
     path: 'personManage',
@@ -89,7 +93,7 @@ let workOrder = [{ //工单中心
 const router = new Router({
     mode: 'history',
     routes: [{
-        path: '/login',
+        path: '/',
         name: 'login',
         component: Login,
         meta: { title: '登录' }
@@ -97,7 +101,7 @@ const router = new Router({
         path: '/news',
         name: 'news',
         component: NewsIndex,
-        meta: { title: '新闻中心' },
+        meta: { title: '企业动态' },
         children: newsPublish
     }, {
         path: '/work',
@@ -115,6 +119,13 @@ const router = new Router({
         name: 'index',
         component: Index,
         meta: { title: '首页' }
+    }, {
+
+        path: '/trends',
+        name: 'trends',
+        component: Trends,
+        meta: { title: '首页管理' }
+
     }, {
         path: '/modulePage',
         name: 'modulePage',
@@ -144,11 +155,11 @@ const router = new Router({
 })
 
 router.beforeEach(({ meta, path }, from, next) => {
-    if (path !== '/login' && !store.state.authorization) {
+    if (path !== '/' && !store.state.authorization) {
         console.log('没有权限...');
-        return next({ path: '/login' });
+        return next({ path: '/' });
     }
-    if (path === '/login' && store.state.authorization) {
+    if (path === '/' && store.state.authorization) {
         console.log('已经登录....');
         return next({ path: '/index' });
     }

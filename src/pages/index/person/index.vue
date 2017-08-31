@@ -19,7 +19,7 @@
                 <button type="button" class="person-avatar-edit" href="javascript:;">修改头像</button>
             </el-upload>
 
-            <el-dialog v-model="dialogVisible" size="tiny">
+            <el-dialog v-model="dialogVisible" size="small">
                 <img width="100%" :src="avatar" alt="">
             </el-dialog>
 
