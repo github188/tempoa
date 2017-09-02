@@ -35,7 +35,7 @@
 				<div class="entry-menu">
 					<ul>
 						<li v-for="(item, index) in menuList" :key="index">
-							<router-link :to="{name:'affairsContact', params:{id: item.id, name: item.name}}">
+							<router-link :to="{name:'attendanceReport', params:{id: item.id, name: item.name}}">
 								<em class="icon" :class="item.icon"></em>
 								<span>{{item.name}}</span>
 								<em class="icon-cell"></em>

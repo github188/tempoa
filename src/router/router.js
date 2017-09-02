@@ -3,14 +3,54 @@ import Router from 'vue-router'
 import store from '@/vuex/'
 import common from '@/utils/common'
 
-import { Login, Index, Trends, PersonInfo, ModulePage, Project, ProjectManage, DemandManage, NewsIndex, NewsList, NewsDetail, WorkIndex, WorkList, WorkDetail, Attendance, AttendanceReport, AttendanceDepartmentReport, AttendanceSetting, Affairs, AffairsContact, AffairsAttendance, Organize, OrganizePerson, OrganizeRole, OrganizeMenu } from './index'
+import {
+    Login,
+    Index,
+    Trends,
+    PersonInfo,
+    ModulePage,
+    Project,
+    ProjectManage,
+    DemandManage,
+    NewsIndex,
+    NewsList,
+    NewsDetail,
+    WorkIndex,
+    WorkList,
+    WorkDetail,
+    Attendance,
+    AttendanceReport,
+    AttendanceDepartmentReport,
+    AttendanceSetting,
+    Affairs,
+    AffairsContact,
+    AffairsAttendance,
+    Organize,
+    OrganizePerson,
+    OrganizeRole,
+    OrganizeMenu,
+    Contract,
+    ContractManage,
+    ContractSetting
+} from './index'
 
 Vue.use(Router)
 
+let contractManage = [{ //合同管理模块
+    path: 'manage',
+    name: 'contractManage',
+    component: ContractManage,
+    meta: { title: '合同管理' },
+}, {
+    path: 'setting',
+    name: 'contractSetting',
+    component: ContractSetting,
+    meta: { title: '合同设置' },
+}]
 
 let attendanceManage = [{ //考勤管理模块
     path: 'report',
-    name: 'report',
+    name: 'attendanceReport',
     component: AttendanceReport,
     meta: { title: '考勤报表' },
 }, {
@@ -150,6 +190,11 @@ const router = new Router({
             name: 'organize',
             component: Organize,
             children: organizeManage
+        }, {
+            path: '/contract',
+            name: 'contract',
+            component: Contract,
+            children: contractManage
         }]
     }]
 })

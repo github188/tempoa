@@ -1,7 +1,7 @@
 <template>
 	<header class="header">
         <div class="header-box">
-            <a href="/index" class="logo" title="亿车科技OA系统首页">
+            <a href="/index" class="logo" title="亿车科技EAP系统首页">
                 <h2>
                     <img src="./img/logo.png" alt="">
                 </h2>

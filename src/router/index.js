@@ -10,6 +10,10 @@ import Project from '@/pages/project/' //项目管理入口
 import ProjectManage from '@/pages/project/manage/projectManage' //项目管理页面
 import DemandManage from '@/pages/project/demand/demandManage' //项目管理页面
 
+import Contract from '@/pages/contract/' //合同管理入口
+import ContractManage from '@/pages/contract/manage/' //合同管理页面
+import ContractSetting from '@/pages/contract/setting/' //合同设置页面
+
 import Attendance from '@/pages/attendance/' //考勤管理入口
 import AttendanceReport from '@/pages/attendance/report/' //考勤报表
 import AttendanceSetting from '@/pages/attendance/setting/' //考勤设置
@@ -57,6 +61,9 @@ export {
     Organize,
     OrganizePerson,
     OrganizeRole,
-    OrganizeMenu
+    OrganizeMenu,
+    Contract,
+    ContractManage,
+    ContractSetting
 
 }

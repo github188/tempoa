@@ -53,10 +53,9 @@
 
 	}
 </style>
-
-
 <script>
 	import Calendar from '@/components/Calendar'  //日历考勤
+	import { getStore } from '@/utils/localStorage'
 	export default{
 		name: 'report',
 		components: {
@@ -82,12 +81,18 @@
 		},
 		created(){
 			this.getList();
-			this.getButton();
+			
 		},	
+		mounted(){
+			//获取当前用户看到的按钮
+			Utils.getButton((data)=>{
+				this.button = data;
+			})
+
+		},
 		methods: {
 			treeClick(a){
 				this.form.depId = a.id;
-				this.getList();
 			},
 			getMonth(month){
 				this.form.month = month;
@@ -119,12 +124,7 @@
 					}
 				})
 			},
-			getButton(){  //获取当前用户按钮
-				Utils.getButton((data)=>{
-					this.button = data;
-				})
-			},
-			submitReport(id){  //提交报表或导出报表
+			submitReport(id){  //发送考勤邮件或导出报表
 				let object = this.form;
 				if(id == 'exportReport'){  //导出
 					Utils.exportReport('/cwa/attendance/all/export', object);
@@ -135,7 +135,7 @@
 							month: object.month
 						},
 						type: 'get',
-						success(data){
+						success(data, $this){
 							if(data.code == 'success'){
 								$this.$message({
 									type: 'success',

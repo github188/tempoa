@@ -82,12 +82,16 @@
 		},
 		created(){
 			this.getList();
-			this.getButton();
 		},	
+		mounted(){
+			//获取当前用户看到的按钮
+			Utils.getButton((data)=>{
+				this.button = data;
+			})
+		},
 		methods: {
 			treeClick(a){
 				this.form.depId = a.id;
-				this.getList();
 			},
 			getMonth(month){
 				this.form.month = month;
@@ -134,11 +138,6 @@
 						} 
 					}
 				});
-			},
-			getButton(){  //获取当前用户按钮
-				Utils.getButton((data)=>{
-					this.button = data;
-				})
 			},
 			submitReport(id){  //提交报表或导出报表
 				let object = this.form;

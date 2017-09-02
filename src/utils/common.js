@@ -29,10 +29,11 @@ window.Utils = {
             }
         },
         getButton(call) {
+            const id = $('.router-link-active').attr('data-id');
             vm.ajax({
                 url: '/authority/resource/user/resources',
                 data: {
-                    resourceId: JSON.parse(getStore('subMenuParams')).id
+                    resourceId: id
                 },
                 success(data) {
                     if (data.code == 'success') {

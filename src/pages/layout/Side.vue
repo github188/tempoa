@@ -11,19 +11,31 @@
 				</router-link>
 			</li> -->
 
-			<li @click="setParams(1501039773776563)">
-				<router-link to="/attendance/report">
+			<!-- <li>
+				<router-link to="/attendance/report" data-id="1501039773776563">
 					<span>考勤报表</span>
 				</router-link>
 			</li>
-			<li @click="setParams(1501039889775823)">
-				<router-link to="/attendance/setting">
+			<li>
+				<router-link to="/attendance/setting" data-id="1501039889775823">
 					<span>考勤设置</span>
 				</router-link>
 			</li>
-			<li @click="setParams(1502696529259506)">
-				<router-link to="/attendance/department">
+			<li>
+				<router-link to="/attendance/department" data-id="1502696529259506">
 					<span>部门考勤</span>
+				</router-link>
+			</li> -->
+
+
+			<li>
+				<router-link to="/contract/manage" data-id="1497949460291559">
+					<span>合同</span>
+				</router-link>
+			</li>
+			<li>
+				<router-link to="/contract/setting" data-id="1497957466761717">
+					<span>合同设置</span>
 				</router-link>
 			</li>
 
@@ -106,13 +118,6 @@
 				menuList: []
 			}
 		},
-		methods: {
-			setParams(id){
-				setStore('subMenuParams', {
-					id: id
-				});
-			}
-		},
 		created(){
 			const menuParmas = JSON.parse(getStore('menuParmas'));
 			this.ajax({  //获取菜单
@@ -120,7 +125,6 @@
 				success(data, $this){
 					console.log(data, '获取菜单');
 					if(data.code == 'success'){
-						console.log(data.content,1231)
 						$this.menuList = data.content;
 					}else{
 						this.$message({
@@ -128,7 +132,7 @@
 				          message: '身份验证失败！',
 				          type: 'error',
 				          onClose(){
-								$this.$router.push('/login')		
+								$this.$router.push('/');
 							}
 				        });
 					}

@@ -1,6 +1,7 @@
 //通过code获取数据
 //{
 //	code：cwa_leave_type   获取请假类型
+// 	code: ctm_attr  //获取合同类型
 //}
 <template>
     <el-select v-model="result" clearable class="select-area" @change="getCode" placeholder="请选择">
