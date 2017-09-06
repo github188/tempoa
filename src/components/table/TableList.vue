@@ -21,8 +21,8 @@
 		</template>
 
     </el-table>
-
-    <el-pagination
+	
+    <el-pagination v-if="isPage"
       @current-change="changes"
       @size-change="siezeChange"
       :current-page="pageIndex"

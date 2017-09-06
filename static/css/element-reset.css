@@ -29,7 +29,11 @@ a:hover {
 .el-button--info:active {
     border-color: #01cd78;
     background-color: transparent;
-    color: #48576a;
+    color: #01cd78;
+}
+
+.el-upload-list__item.is-success .el-upload-list__item-name:hover {
+    color: #01cd78;
 }
 
 
@@ -219,4 +223,15 @@ a:hover {
 
 .common-confirm .el-message-box__headerbtn {
     top: 12px;
+}
+
+.el-tabs__item.is-active {
+    color: #05d181;
+}
+
+
+/* 固定modal大小，不响应设备尺寸 */
+
+.tiny-modal .el-dialog {
+    width: 550px;
 }

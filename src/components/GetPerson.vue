@@ -19,7 +19,7 @@
 	</el-dialog> -->
 
 	<el-select
-		v-model="id"
+		v-model="value"
 		filterable
 		clearable
 		:multiple="multiple"
@@ -41,6 +41,7 @@
 	/* .choose-person .el-dialog__body{
 		min-height: 580px;
 	} */
+
 </style>
 
 <script>
@@ -49,12 +50,15 @@
 		name: "getPerson",
 		data(){
 			return {
-				id: '',
+				value: undefined,
 				personList: []
 			}
 		},
 		created(){
 			this.getList();
+		},
+		updated(){
+			console.log(21313)
 		},
 		methods: {
 			getList(){
@@ -67,6 +71,7 @@
 					success(data, $this){
 						if(data.code == 'success'){
 							$this.personList = data.content;
+							$this.value = $this.selected;
 						}
 					}
 				})
@@ -99,7 +104,7 @@
 				this.$emit('remove', obj);
 			}
 		},
-		props: ['change', 'multiple', 'remove']
+		props: ['change', 'multiple', 'remove', 'selected']   //selected 之前选中i的数据   remove 移除事件  multiple是否多选
 	}
 
 	// export default{

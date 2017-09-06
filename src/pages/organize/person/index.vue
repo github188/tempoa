@@ -1,116 +1,101 @@
+
 <template>
 	<div>
 		<v-panel title="组织架构管理">
-            
             <div slot="button">
                 <el-form ref="formInline" :model="form" label-width="60px" :inline="true">
                     <el-form-item label="姓名：">
                         <el-input v-model="form.queryInfo" placeholder="请输入员工姓名或者手机号"></el-input>
                     </el-form-item>
-                    <button type="button" @click="getList(form.id)" class="search-btn btn btn-green">查询</button>
-                    <button type="button" @click="getList" class="search-btn btn btn-space">添加成员</button>
-                    <button type="button" @click="getList" class="search-btn btn btn-space">导出列表</button>
+                    <button type="button" @click="getPersonList()" class="search-btn btn btn-green">查询</button>
+                    <button type="button" @click="getPersonList" class="search-btn btn btn-space">添加成员</button>
+                    <button type="button" @click="getPersonList" class="search-btn btn btn-space">导出列表</button>
                 </el-form>
             </div>
-            
-			<el-row :gutter="24">
-				<el-col :span="6">
-                    <button @click="editTree" class="btn btn-space edit-tree-btn">编辑</button>
-					<div class="department">
-						<v-department @click="treeClick"></v-department>
-					</div>
-				</el-col>
-				<el-col :span="18">
-					<div id="tableList"></div>
-				</el-col>
-			</el-row>
+	
+            <div class="department">
+                    <el-tree
+                        node-key="id"
+                        :default-expanded-keys="['1']"
+                        :render-content="renderContent"
+                        highlight-current
+                        :expand-on-click-node="false"
+                        :data="departList"
+                        ref="tree"
+                        :props="{
+                            label: 'name',
+                            children: 'children'
+                        }">
+                    </el-tree>
+
+
+            </div>
+            <div id="tableList" style="padding-left: 320px"></div>
 		</v-panel>
 
-       <el-dialog title="编辑部门" :visible.sync="modal.editBoxModal" size="tiny">
-           <v-panel title="功能操作">
-               <div slot="button">
-                   <button type="button" @click="modal.addModal = true" class="btn btn-space">添加</button>
-                   <button type="button" @click="editDepart" class="btn btn-space">编辑</button>
-                   <button type="button" @click="delDepart" class="btn btn-space">删除</button>
-               </div>
-               <v-department ref="getTree" @click="treeClickEdit"></v-department>
-           </v-panel>
-       </el-dialog>
-
-       <el-dialog title="添加部门" :visible.sync="modal.addModal" size="tiny">
-          <el-form ref="addForm" :model="addForm" :rules="rules" label-width="120px" label-position="right">
+        <el-dialog :title="depart.title" :visible.sync="depart.modal" size="tiny" class="tiny-type-modal">
+            <el-form ref="form" :model="depart.form" :rules="depart.rules" label-width="110px" label-position="right">
                 <el-form-item label="部门名称：" prop="name">
-                    <el-input v-model="addForm.name"></el-input>
+                    <el-input v-model="depart.form.name"  style="width: 90%"></el-input>
                 </el-form-item>
 
-                <el-form-item label="部门负责人：">
-                    <v-person @change="chooseAddPerson" style="width:100%"></v-person>
-                </el-form-item>
-          </el-form>
 
-          <span slot="footer" class="dialog-footer">
-                <el-button type="success" @click="addDepart">确 定</el-button>
-                <el-button type="info" @click="modal.addModal = false">取 消</el-button>
+                <el-form-item v-if="type == 0" label="上级部门：" prop="parentName">
+                    <el-input v-model="depart.form.parentName"  style="width: 90%"></el-input>
+                </el-form-item>
+
+                <el-form-item label="部门负责人：" prop="currentLeader">
+                    <el-select  style="width:90%"
+                        v-model="depart.form.currentLeader"
+                        filterable
+                        clearable
+                        placeholder="请输入关键字">
+                        <el-option
+                            v-for="item in personList"
+                            :key="item.id"
+                            :label="item.realname"
+                            :value="item.id + '|' + item.realname">
+                            <span style="float:left" class="search-label">{{item.realname}}</span>
+                            <span style="float:right; padding-right:40px;" class="search-label">{{item.phone}}</span>
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+            </el-form>
+
+            <span slot="footer" class="dialog-footer">
+                <el-button type="success" :disabled="disabled" v-if="disabled"><i class="el-icon-loading"></i></el-button>
+                <el-button type="success" :disabled="disabled" @click="submit" v-else>确 定</el-button>
+                <el-button type="info" @click="depart.modal = false">取 消</el-button>
             </span>
-       </el-dialog>
+        </el-dialog>
 
-        <el-dialog title="编辑部门" :visible.sync="modal.editModal" size="tiny">
-          <el-form ref="addForm" :model="editForm" :rules="rules" label-width="120px" label-position="right">
-                <el-form-item label="部门名称：" prop="name">
-                    <el-input v-model="addForm.name"></el-input>
-                </el-form-item>
-
-                 <el-form-item label="上级部门：">
-                    <!-- <v-department @change="choosePerson" style="width:100%"></v-department> -->
-                    <el-cascader
-                    style="width: 100%"
-                    :options="departOptions"
-                    :change-on-select="true"
-                    :value="editForm.value"
-                    @change="departOptionsChange"
-                    :props="{
-                        value: 'id',
-                        label: 'name'
-                    }"
-                    :show-all-levels="true"
-                    ></el-cascader>
-                </el-form-item>
-
-                <el-form-item label="部门负责人：">
-                    <v-person @change="choosEditPerson" style="width:100%"></v-person>
-                </el-form-item>
-          </el-form>
-
-          <span slot="footer" class="dialog-footer">
-                <el-button type="success" @click="editDepartSubmit">确 定</el-button>
-                <el-button type="info" @click="modal.editModal = false">取 消</el-button>
-            </span>
-       </el-dialog>
-
-
-        <el-dialog title="个人信息详情" :visible.sync="modal.pesonModal" size="small" class="person-modal">
+        <el-dialog title="个人信息详情" :visible.sync="person.detailModal" size="small" class="person-modal">
             <el-row :gutter="24">
 				<el-col :span="8">
 
                     <el-form label-width="120px" label-position="right">
                         <el-form-item label="姓　　名：">
-                            <span> {{personInfo.realname}} </span>
+                            <span> {{person.info.realname}} </span>
+                        </el-form-item>
+
+                        <el-form-item label="邮　　箱：">
+                            <span> {{person.info.email}} </span>
                         </el-form-item>
 
                         <el-form-item label="手　　机：">
-                            <span> {{personInfo.phone}} </span>
+                            <span> {{person.info.phone}} </span>
                         </el-form-item>
 
                         <el-form-item label="部　　门：">
-                            <span>  {{personInfo.depName}} </span>
+                            <span>  {{person.info.depName}} </span>
                         </el-form-item>
 
                         <el-form-item label="专业级别：">
-                            <span> {{personInfo.professLevel || '/'}} </span>
+                            <span> {{person.info.professLevel || '/'}} </span>
                         </el-form-item>
 
                         <el-form-item label="直接上级：">
-                            <span> {{personInfo.leaderName || '/'}} </span>
+                            <span> {{person.info.leaderName || '/'}} </span>
                         </el-form-item>
 
                     </el-form>
@@ -119,107 +104,40 @@
 				<el-col :span="8">
                     <el-form label-width="120px" label-position="right">
                         <el-form-item label="工　　号：">
-                            <span> {{personInfo.usercode}} </span>
+                            <span> {{person.info.usercode}} </span>
+                        </el-form-item>
+
+                        <el-form-item label="生　　日：">
+                            <span> {{person.info.idcard || '/'}} </span>
                         </el-form-item>
 
                         <el-form-item label="性　　别：">
-                             <span> {{ personInfo.sex == 1? '男': '女'}} </span>
+                             <span> {{ person.info.sex == 1? '男': '女'}} </span>
                         </el-form-item>
 
                         <el-form-item label="岗　　位：">
-                            <span> {{personInfo.post}} </span>
+                            <span> {{person.info.post}} </span>
                         </el-form-item>
 
                         <el-form-item label="管理级别：">
-                            <span> {{personInfo.manageLevel || '/'}} </span>
+                            <span> {{person.info.manageLevel || '/'}} </span>
                         </el-form-item>
 
-                        <el-form-item label="常　驻　地：">
-                            <span> {{personInfo.address || '/'}} </span>
+                        <el-form-item label="常 驻 地：">
+                            <span> {{person.info.address || '/'}} </span>
                         </el-form-item>
                     </el-form>
 				</el-col>
 
                 <el-col :span="8">
-                    <img :src="personInfo.avatar" alt="" style="height: 120px; width: 120px; border-radius: 50%">
+                    <img @click="person.avatarModal = true"  :src="person.avatar" alt="" style="cursor:pointer; height: 120px; width: 120px; border-radius: 50%">
 				</el-col>
 			</el-row>
        </el-dialog>
 
-
-        <el-dialog title="编辑员工信息" :visible.sync="modal.editPersonModal" size="tiny" class="person-edit-modal">
-            <el-form ref="editForm1" :model="editPersonForm" :rules="editPersonRule" label-width="100px" label-position="right">
-
-                <el-row :gutter="24">
-                    <el-col :span="10">
-                        <el-form-item label="姓名：" prop="realname">
-                            <el-input v-model="editPersonForm.realname"></el-input>
-                        </el-form-item>
-
-                        <el-form-item label="手机：" prop="phone">
-                            <el-input v-model="editPersonForm.phone"></el-input>
-                        </el-form-item>
-
-                        <el-form-item label="邮箱：" prop="username">
-                            <el-input v-model="editPersonForm.username"></el-input>
-                        </el-form-item>
-
-                        <el-form-item label="直接上级：" prop="leaderName">
-                            <!-- <el-input v-model="editPersonForm.leaderName"></el-input> -->
-                            <v-person  @change="chooseLeader"></v-person>
-                        </el-form-item>
-
-                        <el-form-item label="部门：" prop="depName">
-                            <el-input v-model="editPersonForm.depName"></el-input>
-                        </el-form-item>
-
-                        <el-form-item label="专业级别：">
-                            <el-input v-model="editPersonForm.professLevel"></el-input>
-                        </el-form-item>
-
-                    </el-col>
-
-                    <el-col :span="10">
-
-                        <el-form-item label="工号：" prop="usercode">
-                            <el-input v-model="editPersonForm.usercode"></el-input>
-                        </el-form-item>
-
-                        <el-form-item label="性别：" prop="sex">
-                            <!-- <el-input v-model="editPersonForm.sex"></el-input> -->
-                            <el-radio class="radio" v-model="editPersonForm.sex" :label="1">男</el-radio>
-                            <el-radio class="radio" v-model="editPersonForm.sex" :label="2">女</el-radio>
-
-                        </el-form-item>
-
-                        <el-form-item label="岗位：" prop="post">
-                            <el-input v-model="editPersonForm.post"></el-input>
-                        </el-form-item>
-
-                        <el-form-item label="常驻地：" prop="address">
-                            <el-input v-model="editPersonForm.address"></el-input>
-                        </el-form-item>
-
-                        <el-form-item label="管理级别：">
-                            <el-input v-model="editPersonForm.manageLevel"></el-input>
-                        </el-form-item>
-
-                    </el-col>
-
-                    <el-col :span="4">
-
-                    </el-col>
-
-                </el-row>
-
-            </el-form>
-
-            <span slot="footer" class="dialog-footer">
-                <el-button type="info" @click="modal.editPersonModal = false">取 消</el-button>
-            </span>
+        <el-dialog v-model="person.avatarModal" size="small">
+            <img width="100%" :src="person.avatar" alt="">
         </el-dialog>
-
-      
 
 	</div>
 </template>
@@ -231,8 +149,6 @@
 	.department{
 		width:  300px;
 		float: left;
-		overflow: auto;
-		height: 600px;
 	}
 	.panel{
 		overflow: hidden;
@@ -248,243 +164,125 @@
         margin-bottom: 0;
     }
 
-   .person-modal .el-dialog, .person-edit-modal .el-dialog{
-       width: 800px;
-   }
+    .person-modal .el-dialog, .person-edit-modal .el-dialog{
+       width: 1000px;
+    }
+    .department .el-tree{
+        height: 530px;
+        overflow: auto;
+    }
+    .department .edit-tree i{
+        padding: 0 8px;
+        color: #8391a5;
+        visibility: hidden;
+    }
+    .department .edit-tree{
+        float: right;
+    }
+    .department .el-tree-node__content:hover .edit-tree i{
+        visibility: visible;
+    }
+    .department .el-tree-node__content .edit-tree i:hover{
+        color: #01cd78;
+    }
 </style>
 
 
 <script>
-	export default{
+	export default {
 		name: 'deparment',
 		data(){
 			return {
-				pickerOptions: {
-					disabledDate(time) {
-						return time.getTime() > Date.now() - 8.64e7;
-					}
-                },
-                modal: {
-                    editBoxModal: false, //弹出编辑的大框
-                    editModal: false,
-                    addModal: false,
-                    pesonModal: false,
-                    editPersonModal: false
-                },
-               rules: {
-                    name: [{
-                        required: true,
-                        message: '部门名称不能为空！'
-                    }]
-                },
-           
-                addForm: {
-                    name: '',
-                    departId: undefined,  //新增部门时的id
-                    departName: undefined,  //新增部门时的名称
-                    leaderName: null,   //部门负责人
-                    leaderId: null,   //部门负责人id
-                },
-                editForm: {
-                    value: [],
-                    name: '',
-                    departId: undefined,  //删除部门时的id
-                    departName: undefined,  //删除部门时的名称
-                    leaderName: null,   //部门负责人
-                    leaderId: null,   //部门负责人id
-                },
-                editPersonForm: {},
-                editPersonRule:{
-                    realname: [{
-                        required: true,
-                        message: '姓名不能为空！'
-                    }],
-                    usercode: [{
-                        required: true,
-                        message: '工号不能为空！'
-                    }],
-                    sex: [{
-                        required: true,
-                        message: '性别为必选项！'
-                    }],
-                    phone: [{
-                        required: true,
-                        message: '电话号码不能为空！'
-                    }],
-                    depName: [{
-                        required: true,
-                        message: '部门不能为空！'
-                    }],
-                    post: [{
-                        required: true,
-                        message: '岗位不能为空！'
-                    }],
-                    username: [{
-                        required: true,
-                        message: '邮箱不能为空！'
-                    }],
-                    directLeader: [{
-                        required: true,
-                        message: '直接上级不能为空！'
-                    }],
-                    address: [{
-                        required: true,
-                        message: '常驻地不能为空！'
-                    }],
-                    leaderName: [{
-                        required: true,
-                        message: '直接上级不能为空！'
-                    }]
-                },
-             
-                // personForm:{
-                //     realname: '1',
-                //     usercode: '1',
-                //     phone: '',
-                //     sex: 0,
-                //     depId: '',
-                //     post: '',
-                //     username: '',
-                //     email: '',
-                //     professLevel: '',
-                //     manageLevel: '',
-                //     directLeader: '',
-                //     address: '',
-                //     headPic: ''
-                // },
-				form: {
+                type: '',  //当前部门是编辑模式还是添加模式
+                departList: [],  //部门树
+                personList: [],  //全部人员
+                form: {   //查询条件
                     queryInfo: undefined,
                     id: 1
                 },
-                personInfo: {},  //个人信息
-                departOptions: []   //部门数据
+                disabled: false,
+                person: {
+                    detailModal: false,  //个人详情模态框
+                    avatarModal: false, //个人头像大图
+                    info: [], //个人信息
+                    avatar: '',  //头像
+                },
+                depart: {   //部门相关
+                    modal: false,
+                    title: '',  
+                    rules:{
+                        name: [{
+                            required: true,
+                            message: '部门名称不能为空！'
+                        }],
+                        parentName: [{
+                            required: true,
+                            message: '上级部门不能为空！'
+                        }],
+                        currentLeader: [{
+                            required: true,
+                            message: '部门负责人不能为空！'
+                        }]
+                    },
+                    form: {
+                        name: '',  //部门名称
+                        id: '', //部门id
+                        parentId: '',  //上级部门id
+                        parentName: '',  //上级部门名称
+                        currentLeader: '',  //当前的部门负责人
+                    }
+                }
 			};
 		},
 		created(){
-			this.getList(this.form.id);
+            this.getDepartment();
+            this.getPersonList();
+            this.getAllPerson();
 		},	
 		methods: {
-            getDepartOptions(){  //获取部门
+            getDepartment(){  // 获取部门树
                 this.ajax({
 					url: '/authority/dep/tree/list',
 					success(data, $this){
 						if(data.code == "success"){
-							$this.departOptions = data.content;
+							$this.departList = data.content;
 						}
 					}
 				})
             },
-			treeClick(a, b, c){
-                this.form.id = a.id;
-                this.getList(this.form.id);
+            getAllPerson(){   //获取全部人员
+                this.ajax({
+					url: '/authority/user/dep/1',
+					data: {
+						pageNum: 1,
+						pageSize: 1000
+					},
+					success(data, $this){
+						if(data.code == 'success'){
+							$this.personList = data.content;
+						}
+					}
+				})
             },
-            editTree(){
-                this.modal.editBoxModal = true;
-            },
-            treeClickEdit(a, b, c){  //编辑树
-                this.departId = a.id;
-                this.departName = a.name;
-                console.log(a, b, c)
-            },
-            chooseAddPerson(obj){  //选择添加里的部门负责人
-                this.addForm.leaderName = obj.name;
-                this.addForm.leaderId = obj.value;
-            },
-            choosEditPerson(){   //选择编辑里的部门负责人
-                this.editForm.leaderName = obj.name;
-                this.editForm.leaderId = obj.value;
-
-            },
-            addDepart(){  //添加部门
-                 this.$refs.addForm.validate((valid)=>{
-                     if(valid){
-                         if(!this.departId){
-                            this.$message({
-                                type: 'info',
-                                message: '请先选择父部门!'
-                            });   
-                        }else if(!this.addForm.leaderName){
-                            this.$message({
-                                type: 'info',
-                                message: '请选择部门负责人!'
-                            });   
-                        }else{
-                            this.ajax({
-                                url: 'authority/dep',
-                                type: 'post',
-                                data:{
-                                    name: this.addForm.name,
-                                    parentId: this.departId,
-                                    leaderName: this.addForm.leaderName,
-                                    leaderId: this.addForm.leaderId
-                                },
-                                success(data, $this){
-                                    $this.$message({
-                                        type: 'success',
-                                        message: '添加部门成功!'
-                                    });   
-                                    this.modal.addModal = false;
-                                }
-                            })
-                        }
-                     }
-                     
-                 })
-            },
-            editDepart(){  //编辑部门
-                if(!this.departId){
-                    this.$message({
-                        type: 'info',
-                        message: '请先选择父部门!'
-                    });   
-                }else{
-                    this.getDepartOptions();
-                    this.modal.editModal = true;
-                }
-                // this.$refs.editForm.validate((valid)=>{
-
-                // })
-            },
-            editDepartSubmit(){  //提交编辑部门的form
-
-            },
-            delDepart(){ //删除部门
-
-                if(!this.departId){
-                    this.$message({
-                        type: 'info',
-                        message: '请先选择父部门!'
-                    });   
-                }else{
-
-                    this.$confirm('确定删除'+ this.departName +'及其子部门？', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                    }).then(() => {
-                        this.ajax({
-                            url: '/authority/dep/' + this.departId + '/delete',
-                            type: 'delete',
-                            success(data, $this){
-                                if(data.code == 'success'){
-                                    $this.$message({
-                                        type: 'success',
-                                        message: '删除部门成功!'
-                                    });   
-                                }
+            getDepartLeader(){ //获取部门负责人
+                this.ajax({
+                    url: '/authority/dep/'+ this.depart.form.id  +'/detail',
+                    success(data, $this){
+                        if(data.code == 'success'){
+                            const content = data.content;
+                            if(content.leaderName != null){
+                                $this.depart.form.currentLeader = content.leaderId + '|' + content.leaderName;
                             }
-                        })
-                    }).catch(() => {});
-                }
+                        }
+                    }
+                })
             },
-            editPersonSubmit(){  //编辑用户信息
-                console.log(this.personForm)
-            },
-			getList(id){   //查询部门对应的员工
+    
+            getPersonList(id){   //查询部门对应的员工
                 const { queryInfo } =  this.form;
                 let $this = this;
 				this.tableList({
-                    url: '/authority/user/dep/' + id,
+                    url: '/authority/user/dep/' + this.form.id,
                     
                     checkbox(data){
 
@@ -518,13 +316,13 @@
                             return [{
                                 name: '详情',
                                 click(row){
-                                    $this.modal.pesonModal = true;
+                                    $this.person.detailModal = true;
                                     $this.ajax({
                                         url: 'authority/user/'+ row.id +'/detail',
                                         success(data, that){
                                             if(data.code == 'success'){
-                                                $this.personInfo = data.content;
-                                                $this.personInfo.avatar = Utils.getAvatar(data.content);
+                                                $this.person.info = data.content;
+                                                $this.person.avatar = Utils.getAvatar(data.content);
                                             }
                                         }
                                     })
@@ -560,7 +358,7 @@
                                                         type: 'success',
                                                         message: '操作成功!'
                                                     }); 
-                                                    $this.getList($this.form.id)
+                                                    $this.getPersonList($this.form.id)
                                                 }
                                             }
                                         })
@@ -600,12 +398,110 @@
                     }]
 				})
             },
-            chooseLeader(obj){  //选择领导人
-                console.log(obj)
+            renderContent(h, { node, data, store }) {
+                return (
+                <span>
+                    <span>{node.label}</span>
+                    <span class="edit-tree">
+                        <i title="编辑" on-click={ () => this.openModal(store, data, 0)} class="el-icon-edit"></i>
+                        <i title="新增" on-click={ () => this.openModal(store, data, 1)} class="el-icon-plus"></i>
+                        <i title="删除" on-click={ () => this.remove(store, data)} class="el-icon-delete"></i>
+                    </span>
+                </span>);
             },
-            departOptionsChange(){
-               
+            openModal(store, data, type){
+                this.type = type;
+                this.depart.form.id = data.id;
+                
+                if(type == 0){  //编辑
+                    this.depart.title = '编辑';
+                    this.depart.form.name = data.name;
+                    this.depart.form.parentId = data.pId;
+                    this.getDepartLeader();
+                }else if(type == 1){  //添加
+                    this.depart.title = '添加';
+                    this.depart.form.name = '';
+                    this.depart.form.parentId = data.id;
+                    this.depart.form.currentLeader = '';
+                }
+                
+                this.depart.modal = true;
+            },
+            remove(store, $data){
+                this.$confirm('确定要删除此部门及其子部门吗？', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.ajax({
+                        url: '/authority/dep/'+ $data.id +'/delete',
+                        type: 'delete',
+                        success(data, $this){
+                            if(data.code == 'success'){
+                                store.remove($data);
+                                $this.$message({
+                                    type: 'success',
+                                    message: '操作成功!'
+                                });  
+                            }else{
+                                $this.$message({
+                                    message: data.message,
+                                    type: 'warning'
+                                });
+                            }
+                        }
+                    })
+                }).catch(() => {});
+
+            },
+            submit(){  //
+                this.$refs.form.validate((valid)=>{
+                    if(valid){
+                        this.disabled = true;
+                        const depart = this.depart.form;
+                        let leader = this.depart.form.currentLeader.split('|');
+                        const leaderId = leader[0];
+                        const leaderName = leader[1];
+                        let params = {
+                            name: depart.name,
+                            leaderName: leaderName,
+                            leaderId: leaderId,
+                            parentId: depart.parentId,
+                        }
+
+                        console.log(params)
+                        if(this.type == 0){  //编辑
+                            params.id = depart.id;
+                        }else if(this.type == 1){  //添加
+
+                        }
+
+                        this.ajax({
+                            url: '/authority/dep',
+                            type: 'post',
+                            data: params,
+                            success(data, $this){
+                                if(data.code == 'success'){
+                                    $this.$message({
+                                        message: '操作成功！',
+                                        type: 'success'
+                                    });
+                                    $this.depart.modal = false;
+                                    $this.getDepartment();
+                                    $this.disabled = false;
+                                }else{
+                                    $this.$message({
+                                        message: data.message,
+                                        type: 'warning'
+                                    });
+                                    $this.disabled = false;
+                                }
+
+                            }
+                        })
+                    }
+                })  
             }
-		}
+        }
 	}
 </script>

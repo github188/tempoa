@@ -141,7 +141,7 @@
 		width: 100px;
 		font-size: 16px;
 		color: #01cd78;
-		background: url("../img/icon.png") -370px -305px;
+		background: url("/index/img/icon.png") -370px -305px;
 	}
 	.news-comments span{
 		padding-left: 50px;
@@ -179,7 +179,7 @@
 	.comments-num{
 		height: 30px;
 		width: 180px;
-		background: url("../img/icon.png") -370px -305px;
+		background: url("/index/img/icon.png") -370px -305px;
 		padding-left: 50px;
 		font-size:22px;
 		color: #01cd78;

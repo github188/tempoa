@@ -2,10 +2,10 @@
 <template>
     <div >
         <el-dialog title="
-        出差申请" :visible.sync="modal" size="tiny">
+        出差申请" :visible.sync="modal" size="tiny" class="tiny-type-modal">
             <el-form ref="form" :model="form" :rules="rules" label-width="100px" label-position="right">
-                <el-form-item label="开始时间：" prop="startDate" style="display:inline-block; width: 215px;">
-                    <el-date-picker style="width: 215px;"
+                <el-form-item label="开始时间：" prop="startDate" style="display:inline-block; width: 228px;">
+                    <el-date-picker style="width: 228px;"
                         :editable="false"
                         @change="countTime"
                         v-model="form.startDate"
@@ -14,8 +14,8 @@
                     </el-date-picker>
                 </el-form-item>
 
-                <el-form-item prop="startTime" style="display:inline-block; width: 215px">
-                    <el-time-select style="width: 215px;"
+                <el-form-item prop="startTime" style="display:inline-block; width: 228px">
+                    <el-time-select style="width: 228px;"
                         v-model="form.startTime"
                         :editable="false"
                         @change="countTime"
@@ -28,8 +28,8 @@
                     </el-time-select>
                 </el-form-item>
 
-                <el-form-item label="结束时间：" prop="endDate" style="width: 215px; display:inline-block">
-                    <el-date-picker style="width: 215px;"
+                <el-form-item label="结束时间：" prop="endDate" style="width: 228px; display:inline-block">
+                    <el-date-picker style="width: 228px;"
                         :editable="false"
                         :picker-options="endDateOpt"
                         @change="countTime"
@@ -39,8 +39,8 @@
                     </el-date-picker>
                 </el-form-item>
 
-                <el-form-item prop="endTime" style="width: 215px; display:inline-block">
-                    <el-time-select style="width: 215px;"
+                <el-form-item prop="endTime" style="width: 228px; display:inline-block">
+                    <el-time-select style="width: 228px;"
                         v-model="form.endTime"
                         @change="countTime"
                         :editable="false"
@@ -56,7 +56,7 @@
                 </el-form-item>
 
                 <el-form-item label="时长(天)："  prop="timeLength">
-                    <el-input disabled v-model="form.timeLength" style="width: 80px; margin-right:20px;"></el-input>
+                    <el-input disabled v-model="form.timeLength" style="width: 110px; margin-right:20px;"></el-input>
                     <span>如果申请日期包括周末，如有加班请另提加班申请。</span>
                 </el-form-item>
 
@@ -99,7 +99,11 @@
         color: #f00;
     }
 </style>
-
+<style>
+    .tiny-type-modal .el-dialog{
+        width: 600px;
+    }
+</style>
 <script>
 export default {
     name: "leaveModal",
@@ -207,7 +211,7 @@ export default {
             this.$refs.form.validate((valid)=>{
                 if(valid){
                     this.disabled = true;
-                    const params = {
+                    let params = {
                         userId: this.$store.state.u,
                         startTime: this.startDate,
                         endTime: this.endDate,

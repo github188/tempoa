@@ -1,6 +1,7 @@
 import Vue from 'vue'
+// beforeData 预处理数据。自己注入数据
 const TableListConstructor = Vue.extend(require('./TableList.vue'));
-const TableList = ({ columns = [], element = "#tableList", checkbox = false, data = {}, url = '' } = {}) => {
+const TableList = ({ columns = [], element = "#tableList", checkbox = false, beforeData = false, data = {}, isPage = true, url = '' } = {}) => {
     const pageInfo = {};
     var instance = new TableListConstructor({
         methods: {
@@ -12,22 +13,30 @@ const TableList = ({ columns = [], element = "#tableList", checkbox = false, dat
                 arg.pageSize = pageInfo.pageSize //每页显示条数
                 instance.columns = columns; //设置表头
                 instance.checkbox = checkbox; //是否多选
-                instance.ajax({
-                    url: url,
-                    data: arg,
-                    success(result, $this) {
-                        if (result.code == 'success') {
-                            instance.data = result.content; //表列数据
-                            instance.totals = result.totals;
-                            instance.pageIndex = result.pageIndex;
-                            instance.pageSize = arg.pageSize;
+                instance.isPage = isPage; //是否分页
 
-                            if (instance.data.length == 0) {
-                                instance.status = '暂无数据';
+                if (beforeData) { //预处理数据， 没有分页
+                    instance.data = beforeData;
+                } else {
+                    instance.ajax({
+                        url: url,
+                        data: arg,
+                        success(result, $this) {
+                            if (result.code == 'success') {
+                                instance.data = result.content; //表列数据
+                                instance.totals = result.totals;
+                                instance.pageIndex = result.pageIndex;
+                                instance.pageSize = arg.pageSize;
+
+                                if (instance.data.length == 0) {
+                                    instance.status = '暂无数据';
+                                }
+                            } else {
+                                instance.status = '加载失败';
                             }
                         }
-                    }
-                });
+                    });
+                }
             }
         },
         updated() {

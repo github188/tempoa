@@ -6,14 +6,14 @@
                 <el-form-item label="姓名：">
                     <el-input v-model="form.realname"></el-input>
                 </el-form-item>
-
+<!-- 
                  <el-form-item label="直接上级：">
                     <el-input v-model="form.driectName"></el-input>
                 </el-form-item>
 
                  <el-form-item label="常驻地：">
                     <el-input v-model="form.address"></el-input>
-                </el-form-item>
+                </el-form-item> -->
 
                 <button style="margin-top:4px; margin-left: 60px;" type="button" @click="getList" class="btn btn-green">查询</button>
 
@@ -41,8 +41,8 @@
 			return {
 				form: {
 					realname: '',
-					driectName: '',
-					address: ''
+					// driectName: '',
+					// address: ''
 				}
 			}
 		},
@@ -69,7 +69,14 @@
 						value: 'realname'
 					},{
 						name: '电话',
-						value: 'phone'
+						render(row){
+							let value = row.phone;
+							let temp = [];
+							temp[0] = value.slice(0, 3);
+							temp[1] = value.slice(3, 7);
+							temp[2] = value.slice(7);
+							return temp.join("-");
+						}
 					},{
 						name: '邮箱',
 						value: 'email'

@@ -11,7 +11,7 @@
 				</router-link>
 			</li> -->
 
-			<!-- <li>
+			<li>
 				<router-link to="/attendance/report" data-id="1501039773776563">
 					<span>考勤报表</span>
 				</router-link>
@@ -25,10 +25,10 @@
 				<router-link to="/attendance/department" data-id="1502696529259506">
 					<span>部门考勤</span>
 				</router-link>
-			</li> -->
+			</li>
 
 
-			<li>
+			<!-- <li>
 				<router-link to="/contract/manage" data-id="1497949460291559">
 					<span>合同</span>
 				</router-link>
@@ -37,7 +37,7 @@
 				<router-link to="/contract/setting" data-id="1497957466761717">
 					<span>合同设置</span>
 				</router-link>
-			</li>
+			</li> -->
 
 		</ul>
 	</div>
@@ -55,13 +55,14 @@
 	}
 	.side-toggle{
 		display: block;
-		width: 36px;
+		width: 100%;
 		margin:0 auto;
 		height: 36px;
 		line-height: 36px;
 		text-align: center;
 		color: #90929c;
 		font-size: 22px;
+		border-bottom: 1px solid #eee;
 	}
 	.menu-list li{
 		font-size: 16px;
@@ -82,7 +83,8 @@
     	padding-left: 40px;
     	padding-right: 20px;
     	transition: all 250ms ease-in-out;
-    	color: #555;
+		color: #555;
+		border-left: 4px solid #fff;
 	}
 	.menu-list li a.router-link-active{
 		color: #01cd78;
@@ -95,6 +97,7 @@
 		display: block;
 		height: 35px;
 		width: 16px;
+		margin: 0 auto;
 		background: url('./img/menu.png') center no-repeat;
 	}
 	#toggleMenu:checked+.wrap .side-menu{

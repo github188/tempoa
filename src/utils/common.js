@@ -136,8 +136,18 @@ window.Utils = {
         filterHtmlTag(str) {
             str = typeof str == 'string' ? str.replace(/<\/?[^>]*>/g, '') : str;
             return str.trimAll();
-        }
+        },
 
+        /**
+         * 判断字符串是否为空
+         */
+        isNullorEmpty(str) {
+            if ((str == null || str == "null" || str == "" || str == " " || str == undefined || str == "undefined") && (str != 0 || str != "0"))
+                return true;
+            else {
+                return false;
+            }
+        }
     }
     /**
      * 日期对象转为年与日格式
@@ -232,3 +242,45 @@ String.prototype.filterHtml = function() {
     typeof str == 'string' ? str.replace(/<\/?[^>]*>/g, '') : str;
     return str.trim();
 }
+
+// --------------------------------------------
+// 金额添加千分点
+// --------------------------------------------
+Number.prototype.addComma = function() {
+    var number = this;
+    if (number == 0 || Utils.isNullorEmpty(this)) {
+        return "0.00";
+    }
+    var num = number + "";
+    num = num.replace(new RegExp(",", "g"), "");
+    // 正负号处理
+    var symble = "";
+    if (/^([-+]).*$/.test(num)) {
+        symble = num.replace(/^([-+]).*$/, "$1");
+        num = num.replace(/^([-+])(.*)$/, "$2");
+    }
+    if (/^[0-9]+(\.[0-9]+)?$/.test(num)) {
+        var num = num.replace(new RegExp("^[0]+", "g"), "");
+        if (/^\./.test(num)) {
+            num = "0" + num;
+        }
+        var decimal = num.replace(/^[0-9]+(\.[0-9]+)?$/, "$1");
+        var integer = num.replace(/^([0-9]+)(\.[0-9]+)?$/, "$1");
+        decimal = Utils.isNullorEmpty(decimal) ? ".00" : decimal;
+        var re = /(\d+)(\d{3})/;
+        while (re.test(integer)) {
+            integer = integer.replace(re, "$1,$2");
+        }
+        return symble + integer + decimal;
+    } else {
+        return number;
+    }
+};
+
+// --------------------------------------------
+// 删除千分点
+// --------------------------------------------
+String.prototype.removeComma = function() {
+    var num = this.replace(new RegExp(",", "g"), "");
+    return num;
+};

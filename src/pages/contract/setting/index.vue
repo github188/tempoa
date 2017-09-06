@@ -1,47 +1,41 @@
 <template>
 	<div>
        <v-panel class="search-panel">
-            <el-form :model="form" label-width="120px" :inline="true">
-                <el-form-item label="项目归属：">
-                    <v-choose type="radio" @change="getChoose" :data="form.tabChoose"></v-choose>
-                </el-form-item>
-
-                   
-            </el-form>
-
-            <div class="search-box">
-                <button type="button" @click="getList" class="btn btn-green">查询</button>
-            </div>
+		    <el-tabs v-model="activeTab" type="card" @tab-click="handleClick">
+				<el-tab-pane label="类型设置" name="type">
+					<v-type></v-type>
+				</el-tab-pane>
+				<el-tab-pane label="审批设置" name="approve">
+					<v-approve></v-approve>
+				</el-tab-pane>
+				<el-tab-pane label="模板管理" name="template">
+					<v-template></v-template>
+				</el-tab-pane>
+			</el-tabs>
 		</v-panel>
     </div>
 </template>
 
 <script>
+	import Type from './type'
+	import Approve from './approve'
+	import Template from './template'
 	export default {
 		name: 'contracSetting',
+		components: {
+			'v-type': Type,
+			'v-approve': Approve,
+			'v-template': Template
+		},
 		data(){
 			return {
-				form: {
-					tabChoose: [{
-						name: '已通过',
-						value: 2
-					},{
-						name: '审批中',
-						value: 1
-					},{
-						name: '已驳回',
-						value: 3
-					}]
-				}
+				activeTab: 'type',
 			}
 		},
 		methods:{
-			getList(){
+			handleClick(){
 
 			},
-			getChoose(){
-
-			}
 		}
 	}
 	

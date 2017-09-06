@@ -1,31 +1,29 @@
 <template>
 	<div>
 		<v-panel>
-			<el-row :gutter="24">
-				<el-col :span="6">
-					<div class="department">
-						<v-department @click="treeClick"></v-department>
+			
+			<div class="department">
+				<v-department @click="treeClick"></v-department>
+			</div>
+
+			<div style="padding-left: 320px;">
+				<el-form ref="formInline" :model="form" label-width="60px" :inline="true">
+					<el-form-item label="月份：">
+						<el-date-picker :editable="false" :picker-options="pickerOptions" @change="getMonth" v-model="form.month" type="month" placeholder="选择月">
+						</el-date-picker>
+					</el-form-item>
+
+					<el-form-item label="姓名：">
+						<el-input v-model="form.name"></el-input>
+					</el-form-item>
+					<button type="button" @click="getList" class="btn btn-green" style="margin-top:4px; margin-left: 10px;">查询</button>
+
+					<div class="pull-right">
+						<button v-for="(item, index) in button" :key="index" type="button" @click="submitReport(item.url)" class="btn btn-space" style="margin-top:4px; margin-left: 10px;">{{item.name}}</button>
 					</div>
-				</el-col>
-				<el-col :span="18">
-					<el-form ref="formInline" :model="form" label-width="60px" :inline="true">
-						<el-form-item label="月份：">
-							<el-date-picker :editable="false" :picker-options="pickerOptions" @change="getMonth" v-model="form.month" type="month" placeholder="选择月">
-							</el-date-picker>
-						</el-form-item>
-
-						<el-form-item label="姓名：">
-							<el-input v-model="form.name"></el-input>
-						</el-form-item>
-						<button type="button" @click="getList" class="btn btn-green" style="margin-top:4px; margin-left: 10px;">查询</button>
-
-						<div class="pull-right">
-							<button v-for="(item, index) in button" :key="index" type="button" @click="submitReport(item.url)" class="btn btn-space" style="margin-top:4px; margin-left: 10px;">{{item.name}}</button>
-						</div>
-					</el-form>
-					<div id="tableList"></div>
-				</el-col>
-			</el-row>
+				</el-form>
+				<div id="tableList"></div>
+			</div>
 		</v-panel>
 
 		<el-dialog title="考勤详情" :visible.sync="modal" size="small" @close="closeModal" class="calendar-modal">
@@ -39,8 +37,6 @@
 	.department{
 		width:  300px;
 		float: left;
-		overflow: auto;
-		height: 600px;
 	}
 	.panel{
 		overflow: hidden;
@@ -50,7 +46,10 @@
 	.calendar-modal .el-dialog{
 		width: 1300px;
 		height: 700px;;
-
+	}
+	.department .el-tree{
+		overflow: auto;
+		height: 600px;
 	}
 </style>
 <script>

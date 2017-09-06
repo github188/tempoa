@@ -64,18 +64,26 @@
 
 		<v-panel title="合同列表">
 			<div slot="button">
-				<button type="button" class="btn btn-space">发起审批</button>
-				<button type="button" class="btn btn-space">导出合同</button>
-				<button type="button" class="btn btn-space">下载模板</button>
+				<button v-for="(item, index) in button" :key="index" type="button" @click="submitBtn(item.url)" class="btn btn-space" style="margin-top:4px; margin-left: 10px;">{{item.name}}</button>
+				<button  @click="downTemplate" type="button" class="btn btn-space">下载模板</button>
 			</div>
 			<div id="tableList"></div>
 		</v-panel>
+
+		<v-approve ref="approve"></v-approve>
+		<v-template ref="tempate"></v-template>
     </div>
 </template>
 
 <script>
+	import Approve from './approve'
+	import Template from './template'
 	export default {
 		name: 'contracManage',
+		components: {
+			'v-approve': Approve,
+			'v-template': Template
+		},
 		data(){
 			return {
 				tabChoose: [{
@@ -88,6 +96,7 @@
 					name: '已驳回',
 					value: 3
 				}],
+				button: [], 
 				depart:{
 					top:[], //一级部门,
 					middle: [],  //二级部门
@@ -104,7 +113,6 @@
 					startAmount: '',  //合同金额小
 					endAmount: '',  //合同金额大
 					departmentId: '',  //部门id
-					
 				}
 			}
 		},
@@ -113,6 +121,13 @@
 			this.getList();
 		},
 		mounted(){
+			Utils.getButton((data)=>{
+				for(let i = 0; i < data.length; i++){
+					if(data[i].url == 'startVerify' || data[i].url == 'export'){
+						this.button.push(data[i])
+					}
+				}
+			})
 		},
 		methods:{
 
@@ -172,13 +187,28 @@
 						name: '合同类型',
 						value: 'ctmAttr'
 					},{
+						name: '合同金额(元)',
+						render(row){
+							return (row.amount.addComma());
+						}
+					},{
 						name: '归属部门',
-						value: 'depName'
+						render(row){
+							return (row.depName).split('-').reverse().join('-');
+						}
 					}, {
 						name: '发起人',
 						value: 'userName'
 					}, {
-						name: '操作'
+						name: '操作',
+						operator(row){
+							return [{
+								name: '详情',
+								click(){
+									console.log('click')
+								}
+							}]
+						}
 					}],
 					url: '/ctm/contract/list',
 					data: Utils.filterObjectNull(params)
@@ -188,6 +218,20 @@
 			getChoose(value){
 				this.form.status = value;
 				this.getList();	
+			},
+			submitBtn(url){
+				if(url == 'export'){ //导出数据
+					let object = this.form;
+					Utils.exportReport('/ctm/contract/export', object);
+
+				}else if(url == 'startVerify'){  //发起审批
+					this.$refs.approve.openModal();
+
+				}
+			},
+			downTemplate(){  //下载模板
+				this.$refs.tempate.openModal();
+
 			}
 		}
 	}
