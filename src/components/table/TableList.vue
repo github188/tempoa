@@ -9,19 +9,19 @@
 	  		</template>
 	      </el-table-column>
 
-	       <el-table-column v-else 
+      <el-table-column v-else
 		   :key="index"
-	   		show-overflow-tooltip 
-	   		:formatter="item.render" 
-	   		:align="item.align || 'center'" 
-	   		:prop="item.value" 
-	   		:label="item.name" 
+	   		show-overflow-tooltip
+	   		:formatter="item.render"
+	   		:align="item.align || 'center'"
+	   		:prop="item.value"
+	   		:label="item.name"
 	   		:width="item.width">
-	      </el-table-column>
+      </el-table-column>
 		</template>
 
     </el-table>
-	
+
     <el-pagination v-if="isPage"
       @current-change="changes"
       @size-change="siezeChange"
@@ -55,34 +55,41 @@
 				pageIndex: 1,
 				pageSize:0,
 				selection: {},
-				checkbox: function(){
-
-				}
-			}
-		},
+        checkbox: {},
+        flag: true
+			};
+    },
 		updated(){
 			if(this.checkbox){
+        let temp = {};
+        let $selected = this.checkbox.selected;
+        if(this.flag && $selected){
+          for(let i = 0; i < $selected.length; i++){
+            temp[$selected[i].id] = $selected[i];
+          }
+          this.selection = temp;
+          this.flag = false;
+        }
 				let data = this.data;
-				let selection = this.selection;
+        let selection = this.selection;
 				for(let i = 0; i < data.length; i++){
 					for(let key in selection){
 						if(data[i].id == key){
-							this.$refs.tableList.toggleRowSelection(data[i], true);
+              this.$refs.tableList.toggleRowSelection(data[i], true);
 						}
 					}
 				}
 			}
-			
 		},
 		methods:{
 			changes(pages){
 				this.change(pages);
 			},
 			siezeChange(size){
-				this.siezeChange(size);	
+				// this.siezeChange(size);
 			},
 			select(a, row){
-				let _selection = this.selection;
+        let _selection = this.selection;
 				if(Object.keys(_selection).length == 0){
 					_selection[row.id ] = row;
 				}else {
@@ -93,13 +100,13 @@
 						}else{
 							_selection[row.id ] = row;
 						}
-					}	
-				}
-				this.checkbox(_selection);
+					}
+        }
+				this.checkbox.change(_selection);
 			},
 			selectAll(selection){
 				let _selection = this.selection;
-				let  data = this.data;
+				let data = this.data;
 
 				for(let i = 0; i < selection.length; i++){
 					_selection[selection[i].id] = selection[i];
@@ -110,9 +117,8 @@
 						delete _selection[data[i].id];
 					}
 				}
-				this.checkbox(_selection);
+				this.checkbox.change(_selection);
 			}
-			
 		}
-	}
+	};
 </script>

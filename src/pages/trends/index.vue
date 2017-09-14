@@ -1,17 +1,12 @@
 // OA首页管理
 <template>
-  <div>
-      首也关联
-  </div>
-
+	<div>
+		<router-view></router-view>
+	</div>
 </template>
-<style scoped>
-
-
-</style>
 
 <script>
-    export default{
-        name: 'indexManage'
-    }
+	export default {
+		name: 'newsManage',
+	};
 </script>

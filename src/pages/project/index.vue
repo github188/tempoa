@@ -6,9 +6,6 @@
 
 <script>
 	export default {
-		name: 'project',
-		mounted(){
-			// this.$router.push('/project/projectManage');
-		}
-	}
+		name: 'project'
+	};
 </script>

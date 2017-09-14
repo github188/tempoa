@@ -46,7 +46,7 @@
 </style>
 
 <script>
-    import { appHost, appRoot } from '@/config/config'
+    import { appHost, appRoot } from '@/config/config';
     export default{
         name: 'template',
         data(){
@@ -54,20 +54,20 @@
                 modal: false,
                 catalogue: [],  //目录
                 tempId: "1000000"  //目录id
-            }
+            };
         },
         methods:{
             getCatalogue(){  //获取文件目录
                 this.ajax({
                     url: '/ctm/template/tree',
                     success(data, $this){
-                        console.log(data)
+                        console.log(data);
                         if(data.code == 'success'){
                             $this.catalogue = [];
                             $this.catalogue.push( data.content);
                         }
                     }
-                })
+                });
 
             },
             openModal(){
@@ -85,9 +85,9 @@
 								name: name,
 								click(row){
                                     let link = (appHost + appRoot + '/ctm/template/download?id=' + row.id + '&realname=' + name);
-                                    window.open(link)
+                                    window.open(link);
 								}
-							}]
+							}];
 						}
                     }],
                     element: '#catalogueList',
@@ -95,12 +95,12 @@
 					data: {
                         tempId: this.tempId
                     }
-				})
+				});
             },
             loadTemplate(a){
                 this.tempId = a.id;
                 this.getTemplateList();
             }
         }
-    }
+    };
 </script>

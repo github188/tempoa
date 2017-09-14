@@ -4,9 +4,6 @@
 
 <script>
 	export default {
-		name: 'organize',
-		mounted(){
-			// this.$router.push('/attendance/report');
-		}
-	}
+		name: 'organize'
+	};
 </script>

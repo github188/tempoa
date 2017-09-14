@@ -44,7 +44,7 @@
 	            </el-form-item>
 
 	             <el-form-item label="项目成员：">
-	               
+
 	            </el-form-item>
 			</el-form>
 
@@ -87,17 +87,17 @@
   	        	pmo: {  //管理信息
   	        		1: {  //项目经理
   	        			personCategory: 1,
-  	        			personId: '',   
+  	        			personId: '',
   	        			personName: ''
   	        		},
   	        		2: {  //市场负责人
   	        			personCategory: 2,
-  	        			personId: '',   
+  	        			personId: '',
   	        			personName: ''
   	        		},
   	        		3: {  //项目成员
   	        			personCategory: 3,
-  	        			personId: '',   
+  	        			personId: '',
   	        			personName: ''
   	        		}
   	        	}
@@ -107,7 +107,7 @@
 	    },
 	    methods: {
 	      openModal(){
-	      	this.modal = true
+	      	this.modal = true;
 	      },
 	      getMarket(value, b){
 	      	this.form.marktId = value;
@@ -119,10 +119,10 @@
 	      	this.form.areaId = area;
 	      },
 	      openPersonModal(){
-	      	console.log(this.$refs.choosePerson)
+	      	console.log(this.$refs.choosePerson);
       		this.$refs.choosePerson.openModal();
 	      }
 	    },
 	    props: ['title']
-	}
+	};
 </script>

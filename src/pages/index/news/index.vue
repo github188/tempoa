@@ -1,9 +1,9 @@
 <template>
 	<div>
 		<v-header></v-header>
-		
+
 		<div class="container">
-			<router-view></router-view>	
+			<router-view></router-view>
 		</div>
 	</div>
 </template>
@@ -15,10 +15,10 @@
 </style>
 
 <script>
-	import header from '../header'
+	import header from '../header';
 	export default {
 		components: {
 			'v-header': header
 		}
-	}
+	};
 </script>
