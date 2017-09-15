@@ -50,7 +50,7 @@ module.exports = {
      * @param {string} name form的ref属性
      */
     resetForm(name) {
-      this.$refs[name].resetFields();
+      this.$refs[name] && this.$refs[name].resetFields();
     },
     /**
      *  @description 请求处理成功后的消息提示

@@ -2,7 +2,7 @@
 <template>
   <div>
     <el-dialog title="
-          合同审批申请" :visible.sync="modal" size="tiny" class="tiny-modal">
+            合同审批申请" :visible.sync="modal" size="tiny" class="tiny-modal">
       <el-form ref="form" :model="form" :rules="rules" label-width="125px" label-position="right" style="padding:0 30px;">
         <el-form-item label="合同发起人：" prop="salesmanName">
           <el-input v-model="form.salesmanName" :disabled="true"></el-input>
@@ -60,7 +60,7 @@
         </el-form-item>
 
         <el-form-item label="合同附件：">
-          <el-upload ref="upload" accept='xlapplication/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheets' :action="url" :on-success="uploadSuccess" :on-remove="handleRemove">
+          <el-upload ref="upload" accept='application/pdf,xlapplication/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheets' :action="url" :on-success="uploadSuccess" :on-remove="handleRemove">
             <el-button size="small" type="info">点击上传</el-button>
             <span slot="tip" class="el-upload__tip" style="padding-left: 15px;">只能上传word/excel类型文件</span>
           </el-upload>
@@ -187,18 +187,12 @@ export default {
             data: Utils.filterObjectNull(params),
             success(data, $this) {
               if (data.code == 'success') {
-                $this.$message({
-                  message: '操作成功！',
-                  type: 'success'
-                });
+                $this.successTips(data.message);
                 $this.modal = false;
                 $this.$refs.upload.clearFiles();
                 $this.$refs.form.resetFields();
               } else {
-                $this.$message({
-                  message: data.message,
-                  type: 'warning'
-                });
+                $this.errorTips(data.message);
               }
             }
           });

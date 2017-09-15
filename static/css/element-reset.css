@@ -231,8 +231,10 @@ html {
   color: #05d181;
 }
 
+.el-form-item.is-error .el-input__inner, .el-form-item.is-error .el-textarea__inner{
+  border: 1px solid #dddee1;
+}
 /* 固定modal大小，不响应设备尺寸 */
-
 .tiny-modal .el-dialog {
   width: 550px;
 }

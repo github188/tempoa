@@ -40,7 +40,7 @@
           <div class="person-info">
             <div class="person-info-half">
               <label class="person-info-label">部门</label>
-              <span class="person-info-value">{{info.depName}}</span>
+              <span class="person-info-value">{{reverseDepart(info.depName)}}</span>
             </div>
 
             <div class="person-info-half">

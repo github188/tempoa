@@ -27,11 +27,25 @@
   				</router-link>
   			</li> -->
 
-      <li>
+      <!-- <li>
         <router-link to="/trends/newsManage" data-id="1493891929755783">
           <span>新闻公告</span>
         </router-link>
+      </li> -->
+
+      <li>
+        <router-link to="/project/manage" data-id="1493089982195835">
+          <span>项目</span>
+        </router-link>
       </li>
+
+       <li>
+        <router-link to="/trends/demand" data-id="1493090013334368">
+          <span>需求</span>
+        </router-link>
+      </li>
+
+
 
       <!-- <li>
   				<router-link to="/contract/manage" data-id="1497949460291559">

@@ -159,15 +159,25 @@ export default {
         language: "zh_cn",
         height: 500,
         placeholderText: '写点什么吧...',
+        imageUploadURL: '',
         imageManagerLoadParams: {user_id: 4219762},
         toolbarButtons: [ 'bold', 'italic', 'underline', 'strikeThrough', '|', 'fontFamily', 'fontSize', 'color', '|', 'paragraphFormat', 'align', 'formatOL', 'formatUL', 'outdent', 'indent', 'quote', '-', 'insertLink', 'insertImage', 'insertVideo', 'insertTable', '|', 'emoticons', 'insertHR', 'clearFormatting', '|', 'spellChecker', '|', 'undo', 'redo', 'fullscreen'],
         events: {
           'froalaEditor.initialized': function () {
 
+          },
+          'froalaEditor.image.error': function(e, editor, error, response) {
+            console.log(e, editor, error, response);
+            $('.fr-error').remove();
+          },
+          'froalaEditor.image.uploaded': (e, editor, response)=>{
+            const picId = (JSON.parse(response)).content.picId;
+            const url = this.domain + "/news/picture/content/"+ picId +"/download";
+            editor.image.insert(url);
           }
         }
       },
-      uploadPicUrl: '',  //偷图上传地址
+      uploadPicUrl: '',  //头图上传地址
       uploadFileUrl: '' ,  //附件上传地址
       rules: {
         newsTitle: [{
@@ -190,8 +200,9 @@ export default {
     };
   },
   created() {
-    this.uploadUrl = this.domain + '/news/picture/top/upload';
-    this.uploadFileUrl = this.domain + '/news/attachment/upload';
+    this.uploadUrl = this.domain + '/news/picture/top/upload';  //头图
+    this.uploadFileUrl = this.domain + '/news/attachment/upload'; //附件
+    this.config.imageUploadURL = this.domain + '/news/picture/content/upload'; //编辑器内图片上传地址
     this.getList();
   },
   methods: {
@@ -311,13 +322,13 @@ export default {
                           isTop: false
                         };
                         $this.form.isTop = (isTop?false:true);
-                        if(pictureId){
+                        if(pictureId && pictureId != "false"){
                           $this.picList = [{
                             name: '',
                             url:  $this.domain + '/news/picture/top/' + content.pictureId + '/download'
                           }];
                         }
-                        if(attachmentId){
+                        if(attachmentId && attachmentId != 'false'){
                           $this.fileList = [{
                             name: attachmentName,
                             url:  $this.domain + '/news/picture/top/' + content.attachmentId + '/download'
@@ -344,15 +355,15 @@ export default {
       this.form.pictureId = (response.content.picId).split('.')[0];
     },
     removePic(){
-      this.form.pictureId = undefined;
+      this.form.pictureId = false;
     },
     successFile(response, file){
       this.form.attachmentId = (response.content.picId).split('.')[0];
       this.form.attachmentName = file.name;
     },
     removeFile(){
-      this.form.attachmentId = undefined;
-      this.form.attachmentName = undefined;
+      this.form.attachmentId = false;
+      this.form.attachmentName = false;
     },
     commentsRead(id){
       this.comments.modal = true;

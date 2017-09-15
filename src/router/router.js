@@ -116,13 +116,13 @@ let affairsManage = [
 let projectManage = [
   {
     //项目管理模块
-    path: "projectManage",
+    path: "manage",
     name: "projectManage",
     component: ProjectManage,
     meta: { title: "项目管理" }
   },
   {
-    path: "demandManage",
+    path: "demand",
     name: "demandManage",
     component: DemandManage,
     meta: { title: "需求管理" }

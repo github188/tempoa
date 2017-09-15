@@ -24,6 +24,7 @@
           </div>
           <!--内容-->
           <div class="news-substance" v-html="detail.content"></div>
+          <a title="附件下载" class="file-download" :href="domain + '/news/attachment/'+ detail.attachmentId +'/download'" v-if="detail.attachmentId && detail.attachmentId != 'false'"><i class="el-icon-document" style="padding-right:10px;"></i>{{detail.attachmentName}}</a>
           <div class="comments-area">
             <div class="comments-num">
               <b class="comments-amount">{{commentCount}}</b>
@@ -76,7 +77,12 @@
   max-width: 1440px;
   margin: 0 auto;
 }
-
+.file-download{
+    display: block;
+    height: 60px;
+    line-height: 60px;
+    font-size: 16px;
+}
 .container {
   max-width: 1440px;
   min-width: 1150px;
@@ -424,7 +430,7 @@ export default {
     }
   },
   methods: {
-    bigAvatar(avatar){  //查看大头像
+    bigAvatar(avatar) {  //查看大头像
       this.modal = true;
       this.commentsUser = avatar;
     },
@@ -495,13 +501,13 @@ export default {
       document.body.scrollTop = commentsText.offset().top - 300;
       commentsText.focus();
     });
-     commentsText.on('focus', function () {
-        commentsInput.animate({
-            height: 160
-        },100, 'linear', function () {
-            commentsText.height(100);
-        });
-        $('.submit-box').width(609);
+    commentsText.on('focus', function() {
+      commentsInput.animate({
+        height: 160
+      }, 100, 'linear', function() {
+        commentsText.height(100);
+      });
+      $('.submit-box').width(609);
     });
   },
   mounted() {

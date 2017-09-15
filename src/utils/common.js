@@ -233,7 +233,12 @@ String.prototype.toTime = function() {
   var myDate = new Date(year, month - 1, date);
   return myDate.getTime();
 };
-
+// --------------------------------------------
+// 去除所有空格
+// --------------------------------------------
+String.prototype.trimAll = function () {
+  return this.replace(/\s*/g, "");
+};
 // --------------------------------------------
 // 标准时间格式转换为时间戳（含时分秒）
 // --------------------------------------------

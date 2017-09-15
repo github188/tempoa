@@ -37,21 +37,18 @@
       </div>
     </v-panel>
 
-    <v-panel>
-      <span slot="title">项目</span>
+    <v-panel title="项目">
       <div slot="button">
-        <button type="button" @click="addProject" class="btn btn-space">新增项目</button>
-        <button type="button" class="btn btn-space">导出项目</button>
+        <el-button v-for="(item, index) in buttonList" :key="index" type="info" @click="btnHandle(item.url)">{{item.name}}</el-button>
       </div>
       <div id="tableList"></div>
     </v-panel>
-
     <v-add ref="addProject" title="新建项目"></v-add>
   </div>
 </template>
 
 <script>
-import AddProject from './addProject'
+import AddProject from './addProject';
 export default {
   name: 'projectManage',
   components: {
@@ -62,6 +59,9 @@ export default {
   },
   mounted() {
     this.getList();
+    this.getButton((button)=>{
+      this.buttonList = button;
+    });
   },
   data() {
     return {
@@ -72,17 +72,18 @@ export default {
         scope: '1',  //项目归属
         peopleName: '', //项目负责人
       },
+
+      buttonList: [],
       tabChoose: [{ name: "所有项目", value: 1 }, { name: "我负责的", value: 2 }],
       projectAll: []  //所有的项目状态
 
-    }
+    };
   },
   methods: {
     getMarket(object) {
       this.form.marktId = object.value;  //获取营销中心 id
     },
     getArea(obj) {
-      console.log(obj)
       this.form.provinceId = obj.province.value;
       this.form.cityId = obj.city.value;
       this.form.areaId = obj.area.value;
@@ -105,13 +106,13 @@ export default {
           },
           {
             name: '片区',
-            value: 'marktName'
+            value: 'marktName',
           },
           {
             name: '区域',
             width: 250,
             render(row) {
-              return row.province + '-' + row.area + '-' + row.city;
+              return (row.province + '-' + row.area + '-' + row.city).trimAll();
             }
           },
           {
@@ -132,24 +133,25 @@ export default {
           },
           {
             name: '操作',
-            operator: [{
-              name: "详情",
-              click: function(row) {
-                console.log(row)
-              }
-            }, {
-              name: "新建需求",
-              click: function(row) {
+            operator(){
+              return [{
+                name: '详情',
+                click(){
 
-              }
-            }]
+                }
+              },{
+                name: '新建需求',
+                click(){
+
+                }
+              }];
+            }
           }
-
         ],
         url: '/pmo/project/list',
         data: data,
         element: '#tableList'
-      })
+      });
     },
     getProjectStatus() {
       this.ajax({//获取项目状态
@@ -159,11 +161,18 @@ export default {
             $this.projectAll = data.content;
           }
         }
-      })
+      });
+    },
+    btnHandle(url){
+      if(url == 'pmo_add_project'){  //新增
+       this.$refs.addProject.openModal();
+      }else if(url == 'pmo_export_project'){  //导出
+
+      }
     },
     addProject() {
-      this.$refs.addProject.openModal();
+
     }
   }
-}
+};
 </script>
