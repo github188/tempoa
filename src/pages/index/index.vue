@@ -281,6 +281,7 @@
   max-width: 1440px;
   min-width: 1150px;
   margin: 0 auto;
+  padding-left: 0;
 }
 
 .content {

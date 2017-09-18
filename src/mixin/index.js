@@ -114,5 +114,28 @@ module.exports = {
     reverseDepart(depart){
       return depart && depart.split('-').reverse().join('-');
     },
+      /**
+   *
+   * @param {*} url
+   * @param {*查询的参数条件} object
+   */
+  exportReport(url, object) {
+    let params = "";
+    for (let i in object) {
+      if (object[i] !== "" && object[i] !== null) {
+        params += i + "=" + object[i] + "&";
+      }
+    }
+    window.open(
+      this.domain +
+        url +
+        "?" +
+        params +
+        "authorization=" +
+        Utils.getValue("authorization") +
+        "&userId=" +
+        Utils.getValue("u")
+    );
+  },
   }
 };

@@ -2,7 +2,7 @@
 <template>
   <div>
     <el-dialog :title="title" :visible.sync="modal" size="small" class="add-project">
-      <el-form ref="addForm" :model="form" :rules="rules" label-width="110px" label-position="right">
+      <el-form ref="projectForm" :model="form" :rules="rules" label-width="110px" label-position="right">
         <el-form-item label="项目名称：" prop="proName">
           <el-input v-model="form.proName"></el-input>
         </el-form-item>
@@ -85,6 +85,7 @@ export default {
         personManageName: '',  //项目经理名称
         personMarketName: '',  //市场负责人名称
         personMemberName: '',  //项目成员名称
+        pmoPersonMemberList: [],
         pmoPersonList: [
           {  //项目经理
             personCategory: 1,
@@ -93,11 +94,6 @@ export default {
           },
          {  //市场负责人
             personCategory: 2,
-            personId: '',
-            personName: ''
-          },
-         {  //项目成员
-            personCategory: 3,
             personId: '',
             personName: ''
           }
@@ -142,7 +138,7 @@ export default {
   methods: {
     openModal() {
       this.modal = true;
-      this.resetForm('addForm');
+      this.resetForm('projectForm');
     },
     getMarket(obj) {
       this.form.marktId = obj.value;
@@ -153,6 +149,9 @@ export default {
       this.form.provinceId = province.value;
       this.form.cityId = city.value;
       this.form.areaId = area.value;
+      this.form.province = province.name;
+      this.form.city = city.name;
+      this.form.area = area.name;
     },
     getManageName(obj){  //获取项目经理
       this.form.personManageName = obj.name;
@@ -165,36 +164,56 @@ export default {
       this.form.pmoPersonList[1].personId = obj.value;
     },
     getMemberName(obj){  //获取项目成员
-      if(obj.length > 0){
+      let length = obj.length;
+      this.form.pmoPersonMemberList = [];
+      if(length > 0){
         this.form.personMemberName = obj[0].name;
+        for(var i = 0; i < length; i++){
+          this.form.pmoPersonMemberList.push({
+             personCategory: 3,
+             personId: obj[i].value,
+             personName: obj[i].name
+          });
+        }
       }else{
         this.form.personMemberName = [{name:''}];
       }
-      // this.form.pmoPersonList[2].personName = obj[0].name;
-      // this.form.pmoPersonList[2].personId = obj[0].value;
     },
     submit(){
-      this.refs.addForm.validate((valid)=>{
+      this.$refs.projectForm.validate((valid)=>{
         if(valid){
-
+           this.disable = true;
+          let { provinceId, province, cityId, city, areaId, area, marktName, marktId, proDate, proName, proContents } = this.form;
           let params = {
-
+              pmoProject : {
+                proName: proName,
+                area: area,
+                areaId: areaId,
+                city: city,
+                cityId: cityId,
+                province: province,
+                provinceId: provinceId,
+                marktId: marktId,
+                marktName: marktName,
+                proContents: proContents,
+                proDate: new Date(proDate).toDay()
+              },
+            pmoPersonList: this.form.pmoPersonList.concat(this.form.pmoPersonMemberList)
           };
-          let { provinceId, province, cityId, city, areaId, area, marktName, marktId, proDate, proContents } = this.form;
-
-          params.pmoProject = {
-              // provinceId
-          };
-          // this.disable = true;
           this.ajax({
             url: 'pmo/project',
             type: 'post',
             data: params,
             success(data, $this){
-
+              if(data.code == 'success'){
+                $this.successTips();
+                $this.modal = false;
+                $this.$emit('getList');
+              }else{
+                 $this.errorTips(data.message);
+              }
             }
           });
-
         }
       });
     }

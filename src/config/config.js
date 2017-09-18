@@ -1,5 +1,4 @@
 // export const appHost = 'http://192.168.2.5:8006';
-// export const fsHost = 'http://192.168.2.5:8006';
 // export const appRoot = '/ecms';
 // export const avatar = '/authority/user/picture/head/';
 

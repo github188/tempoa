@@ -2,6 +2,7 @@ import axios from "axios";
 import { getStore } from "@/utils/localStorage";
 import { appHost, appRoot } from "@/config/config";
 const rootUrl = appHost + appRoot;
+let extremely = true;
 export default function(
   {
     type = "get",
@@ -32,13 +33,17 @@ export default function(
     })
     .catch(error => {
       if (error.response) {
-        console.log("response", error.response);
+        console.error("response", error.response);
       } else if (error.request) {
-        this.errorTips("服务器异常!");
-        this.disable = false;
+        if(extremely){
+          this.errorTips("服务器异常!");
+          this.disable = false;
+        }
+        extremely = false;
+
       } else {
-        console.log("Error", error.message);
+        console.error("Error", error.message);
       }
-      console.log("Config", error.config);
+      console.error("Config", error.config);
     });
 }

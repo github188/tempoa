@@ -83,7 +83,7 @@ export default {
       this.$emit('change', this.splitArea(this.area));
     },
     returnAll(value) {
-      if (value){
+      if (value) {
         this.splitStr(value);
       };
       this.$emit('change', this.splitArea(this.area));

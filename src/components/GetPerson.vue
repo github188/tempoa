@@ -13,12 +13,13 @@ export default {
   name: "getPerson",
   data() {
     return {
-      value: '',
-      personList: []
+      personList: [],
+      value: ''
     };
   },
   created() {
     this.getList();
+    this.value = this.selected || '';
   },
   methods: {
     getList() {
@@ -55,6 +56,7 @@ export default {
       }
     },
     removePerson(data) {  //多选情况下的移除事件
+      console.log(data);
       let { value } = data;
       let obj = {
         name: value.split('|')[1],

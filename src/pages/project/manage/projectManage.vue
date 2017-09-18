@@ -43,16 +43,22 @@
       </div>
       <div id="tableList"></div>
     </v-panel>
-    <v-add ref="addProject" title="新建项目"></v-add>
+    <v-add ref="projectAdd" @getList="getList" title="新增项目"></v-add>
+    <v-detail ref="projectDetail" @getList="getList"></v-detail>
+    <v-demandAdd ref="demandAdd"></v-demandAdd>
   </div>
 </template>
 
 <script>
-import AddProject from './addProject';
+import ProjectAdd from './projectAdd';
+import ProjectDetail from './projectDetail';
+import DemandAdd from '../demand/demandAdd';
 export default {
   name: 'projectManage',
   components: {
-    'v-add': AddProject
+    'v-add': ProjectAdd,
+    'v-detail': ProjectDetail,
+    'v-demandAdd': DemandAdd
   },
   created() {
     this.getProjectStatus();
@@ -72,11 +78,9 @@ export default {
         scope: '1',  //项目归属
         peopleName: '', //项目负责人
       },
-
       buttonList: [],
       tabChoose: [{ name: "所有项目", value: 1 }, { name: "我负责的", value: 2 }],
       projectAll: []  //所有的项目状态
-
     };
   },
   methods: {
@@ -93,6 +97,7 @@ export default {
     },
     getList() {
       const data = Utils.filterObjectNull(this.form);  //过滤值为空的对象
+      const $this = this;
       this.tableList({
         columns: [
           {
@@ -112,7 +117,7 @@ export default {
             name: '区域',
             width: 250,
             render(row) {
-              return (row.province + '-' + row.area + '-' + row.city).trimAll();
+              return (row.province + '-' + row.city + '-' + row.area).trimAll();
             }
           },
           {
@@ -136,13 +141,14 @@ export default {
             operator(){
               return [{
                 name: '详情',
-                click(){
-
+                click(row){
+                  console.log(row);
+                  $this.$refs.projectDetail.openModal(row);
                 }
               },{
                 name: '新建需求',
-                click(){
-
+                click(row){
+                  $this.$refs.demandAdd.openModal(row);
                 }
               }];
             }
@@ -165,14 +171,11 @@ export default {
     },
     btnHandle(url){
       if(url == 'pmo_add_project'){  //新增
-       this.$refs.addProject.openModal();
+       this.$refs.projectAdd.openModal();
       }else if(url == 'pmo_export_project'){  //导出
-
+       this.exportReport('/pmo/project/download/excel', this.form);
       }
     },
-    addProject() {
-
-    }
   }
 };
 </script>
