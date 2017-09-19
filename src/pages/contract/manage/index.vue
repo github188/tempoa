@@ -115,7 +115,7 @@ export default {
     this.getList();
   },
   mounted() {
-    Utils.getButton((data) => {
+    this.getButton((data) => {
       for (let i = 0; i < data.length; i++) {
         if (data[i].url == 'startVerify' || data[i].url == 'export') {
           this.button.push(data[i]);
@@ -170,6 +170,7 @@ export default {
     },
     getList() {  //获取合同列表
       const params = this.form;
+      const $this = this;
       this.tableList({
         columns: [{
           name: '合同编号',
@@ -188,7 +189,7 @@ export default {
         }, {
           name: '归属部门',
           render(row) {
-            return (row.depName).split('-').reverse().join('-');
+            return $this.reverseDepart(row.depName);
           }
         }, {
           name: '发起人',

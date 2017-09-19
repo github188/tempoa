@@ -4,7 +4,7 @@
     <el-dialog title="新建需求" :visible.sync="modal" size="small" class="demand-add">
       <el-form ref="demandAddForm" :model="form" :rules="rules" label-width="110px" label-position="right">
         <el-form-item label="项目名称：" prop="project">
-           <el-select v-model="project" placeholder="请选择" class="w-100">
+           <el-select v-model="project" disabled  placeholder="请选择" class="w-100">
             <el-option
               v-for="item in projectList"
               :key="item.value"
@@ -85,9 +85,11 @@ export default {
       this.getProjectList();
   },
   methods: {
-    openModal() {
+    openModal(row) {
       this.modal = true;
-      // this.project = row.id+'|'+row.proName+'|'+row.proCode;
+
+      this.project = row.id+'|'+row.proName+'|'+row.proCode;
+      console.log(this.project);
     },
     getProjectList(){
       this.ajax({
@@ -110,15 +112,16 @@ export default {
           let list = this.project.split('|');
           let { receivePersonId, receivePersonName, reqDetail, reqEmergency, reqtitle } = this.form;
           const params = {
-            addPerson: Utils.getValue('u'),
+            // addPerson: Utils.getValue('u'),
             proId: list[0],
-            proCode: list[2],
+            // proCode: list[2],
             receivePersonId: receivePersonId,
             receivePersonName: receivePersonName,
             reqDetail: reqDetail,
             reqTitle: reqtitle,
             reqEmergency: reqEmergency?'1':'2'
           };
+
           this.ajax({
             url: '/pmo/require/add_submit',
             data: params,

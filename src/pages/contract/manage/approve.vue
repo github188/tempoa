@@ -62,12 +62,12 @@
         <el-form-item label="合同附件：">
           <el-upload ref="upload" accept='application/pdf,xlapplication/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheets' :action="url" :on-success="uploadSuccess" :on-remove="handleRemove">
             <el-button size="small" type="info">点击上传</el-button>
-            <span slot="tip" class="el-upload__tip" style="padding-left: 15px;">只能上传word/excel类型文件</span>
+            <span slot="tip" class="el-upload__tip" style="padding-left: 15px;">只能上传word/excel/pdf类型文件</span>
           </el-upload>
         </el-form-item>
 
         <el-form-item label="其他说明：" prop="remark">
-          <el-input v-model="form.remark" type="textarea"></el-input>
+          <el-input v-model="form.remark"  :autosize="{ minRows: 4, maxRows: 8}" type="textarea"></el-input>
         </el-form-item>
 
       </el-form>
@@ -187,7 +187,7 @@ export default {
             data: Utils.filterObjectNull(params),
             success(data, $this) {
               if (data.code == 'success') {
-                $this.successTips(data.message);
+                $this.successTips();
                 $this.modal = false;
                 $this.$refs.upload.clearFiles();
                 $this.$refs.form.resetFields();

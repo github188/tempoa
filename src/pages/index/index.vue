@@ -211,7 +211,7 @@
                 <ul v-if="todoHandle.length">
                   <li v-for="(item, index) in todoHandle" :key="index">
                     <p>
-                      <router-link :to="{ path: '/work/detail', query: {id: item.id}}">{{item.title}}</router-link>
+                      <router-link :to="{path: '/work/detail', query: {id: item.processId, type: item.type}}">{{item.title}}</router-link>
                       <span class="work-list-info">{{item.sponsorsName}}
                         <em class="work-time"> {{new Date(item.addTime).toDay()}}</em>
                       </span>
@@ -227,7 +227,7 @@
                 <ul v-if="todoAsk.length">
                   <li v-for="(item, index) in todoAsk" :key="index">
                     <p>
-                      <router-link :to="{ path: '/work/detail', query: {id: item.id}}">{{item.title}}</router-link>
+                      <router-link :to="{path: '/work/detail', query: {id: item.id, type: item.type, nodeId: item.nodeId}}">{{item.title}}</router-link>
                       <span class="work-list-info">{{item.sponsorsName}}
                         <em class="work-time"> {{new Date(item.addTime).toDay()}}</em>
                       </span>

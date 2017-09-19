@@ -52,7 +52,7 @@
 <script>
 import ProjectAdd from './projectAdd';
 import ProjectDetail from './projectDetail';
-import DemandAdd from '../demand/demandAdd';
+import DemandAdd from './demandAdd';
 export default {
   name: 'projectManage',
   components: {
@@ -65,7 +65,7 @@ export default {
   },
   mounted() {
     this.getList();
-    this.getButton((button)=>{
+    this.getButton((button)=>{   //获取当前用户的按钮权限
       this.buttonList = button;
     });
   },

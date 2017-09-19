@@ -40,7 +40,7 @@
       </li>
 
        <li>
-        <router-link to="/trends/demand" data-id="1493090013334368">
+        <router-link to="/project/demand" data-id="1493090013334368">
           <span>需求</span>
         </router-link>
       </li>
