@@ -14,20 +14,7 @@ window.Utils = {
       type: "LOG_OUT"
     });
   },
-  /**
-         * 获取用户头像
-         */
-  // getAvatar(data) {
-  //   const { headPic, sex } = data;
-  //   if (headPic != "") {
-  //     return appHost + appRoot + avatar + headPic + "/download";
-  //   }
-  //   if (sex == 1) {
-  //     return "/static/img/man-default.png";
-  //   } else {
-  //     return "/static/img/male-default.png";
-  //   }
-  // },
+
   getButton(call) {
     const id = $(".router-link-active").attr("data-id");
     vm.ajax({

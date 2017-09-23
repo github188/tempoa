@@ -7,6 +7,7 @@ import mixin from '@/mixin';
 import store from '@/vuex/';
 import ajax from '@/utils/ajax';
 import tableList from '@/components/table/TableList';
+import nicescroll from 'nicescroll';
 
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-default/index.css';

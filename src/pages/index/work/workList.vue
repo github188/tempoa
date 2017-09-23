@@ -39,7 +39,7 @@
                         <span class="deal-status">处理中</span>
                       </span>
                       <span v-else>
-                        <span v-if="item.doingPerson.length == 0 && item.donePerson.length == 0">itme.nodesName</span>
+                        <span v-if="item.doingPerson.length == 0 && item.donePerson.length == 0">{{item.nodesName}}</span>
                         <span v-else>已完成</span>
                       </span>
                     </el-col>
@@ -77,7 +77,7 @@
                         <span class="deal-status">处理中</span>
                       </span>
                       <span v-else>
-                        <span v-if="item.doingPerson.length == 0 && item.donePerson.length == 0">itme.nodesName</span>
+                        <span v-if="item.doingPerson.length == 0 && item.donePerson.length == 0">{{item.nodesName}}</span>
                         <span v-else>已完成</span>
                       </span>
                     </el-col>
@@ -115,7 +115,7 @@
                         <span class="deal-status">处理中</span>
                       </span>
                       <span v-else>
-                        <span v-if="item.doingPerson.length == 0 && item.donePerson.length == 0">itme.nodesName</span>
+                        <span v-if="item.doingPerson.length == 0 && item.donePerson.length == 0">{{item.nodesName}}</span>
                         <span v-else>已完成</span>
                       </span>
                     </el-col>

@@ -1,10 +1,10 @@
-const domain = require('@/config/config.js');
+const domain = require("@/config/config.js");
 module.exports = {
-  data(){
+  data() {
     return {
-      domain: domain.appHost + domain.appRoot,     //获取接口地址，其他页面就不用引入config了
+      domain: domain.appHost + domain.appRoot, //获取接口地址，其他页面就不用引入config了
       avatar: domain.avatar,
-      disable: false,   //按钮禁止使用，发起请求之后的等待时间不可用
+      disable: false //按钮禁止使用，发起请求之后的等待时间不可用
     };
   },
   methods: {
@@ -73,6 +73,28 @@ module.exports = {
       });
     },
     /**
+     *  @description 确认框
+     *  @param {string} name  提示的文字
+     */
+    confirmTips(
+      { title = "提示", btn = ["确定", "取消"], content, submit, cancel } = {}
+    ) {
+      this.$confirm(content, title, {
+        confirmButtonText: btn[0],
+        cancelButtonText: btn[1],
+        customClass: "log-out-confirm common-confirm",
+        type: "warning"
+      })
+        .then(() => {
+          submit();
+        })
+        .catch(() => {
+          if(cancel){
+            cancel();
+          };
+        });
+    },
+    /**
      *  @description 获取用户头像
      *  @param {Object} data 用户个人信息
      */
@@ -106,36 +128,49 @@ module.exports = {
         }
       });
     },
-     /**
+    /**
      *  @description 三级部门位置反转
      *  @param {Stringn} 三级部门
      *  @return {String}
      */
-    reverseDepart(depart){
-      return depart && depart.split('-').reverse().join('-');
+    reverseDepart(depart) {
+      return (
+        depart &&
+        depart
+          .split("-")
+          .reverse()
+          .join("-")
+      );
     },
-      /**
+    /**
    *
    * @param {*} url
    * @param {*查询的参数条件} object
    */
-  exportReport(url, object) {
-    let params = "";
-    for (let i in object) {
-      if (object[i] !== "" && object[i] !== null) {
-        params += i + "=" + object[i] + "&";
+    exportReport(url, object) {
+      let params = "";
+      for (let i in object) {
+        if (object[i] !== "" && object[i] !== null) {
+          params += i + "=" + object[i] + "&";
+        }
       }
+      window.open(
+        this.domain +
+          url +
+          "?" +
+          params +
+          "authorization=" +
+          Utils.getValue("authorization") +
+          "&userId=" +
+          Utils.getValue("u")
+      );
     }
-    window.open(
-      this.domain +
-        url +
-        "?" +
-        params +
-        "authorization=" +
-        Utils.getValue("authorization") +
-        "&userId=" +
-        Utils.getValue("u")
-    );
   },
+  mounted(){
+    $("body").niceScroll({
+      cursorcolor:"rgba(125, 125, 125, 0.7)",
+      cursorwidth:"10px",
+      cursorborderradius: 5
+    });
   }
 };

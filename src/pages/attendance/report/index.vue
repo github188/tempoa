@@ -1,20 +1,33 @@
 <template>
   <div>
     <v-panel>
+      <div>
+        <el-form ref="formInline" :model="form" label-width="80px" :inline="true">
+           <el-form-item label="部门：">
+              <el-cascader style="width: 140px"
+                :options="departCascader"
+                :change-on-select="true"
+                :show-all-levels="false"
+                :props="{
+                    value: 'id',
+                    label: 'name',
+                    children: 'children'
+                  }"
+                  v-model="form.depId">
+              </el-cascader>
+          </el-form-item>
 
-      <div class="department">
-        <v-department @click="treeClick"></v-department>
-      </div>
-
-      <div style="padding-left: 320px;">
-        <el-form ref="formInline" :model="form" label-width="60px" :inline="true">
           <el-form-item label="月份：">
-            <el-date-picker :editable="false" :picker-options="pickerOptions" @change="getMonth" v-model="form.month" type="month" placeholder="选择月">
+            <el-date-picker style="width: 140px;"
+            :editable="false"
+            :picker-options="pickerOptions"
+            @change="getMonth"
+            v-model="form.month" type="month" placeholder="选择月">
             </el-date-picker>
           </el-form-item>
 
           <el-form-item label="姓名：">
-            <el-input v-model="form.name"></el-input>
+            <el-input style="width: 140px;" v-model="form.name"></el-input>
           </el-form-item>
           <button type="button" @click="getList" class="btn btn-green" style="margin-top:4px; margin-left: 10px;">查询</button>
 
@@ -22,45 +35,42 @@
             <button v-for="(item, index) in button" :key="index" type="button" @click="submitReport(item.url)" class="btn btn-space" style="margin-top:4px; margin-left: 10px;">{{item.name}}</button>
           </div>
         </el-form>
-        <div id="tableList"></div>
+
       </div>
     </v-panel>
 
+    <v-panel>
+      <div id="tableList"></div>
+    </v-panel>
+
     <el-dialog title="考勤详情" :visible.sync="modal" size="small" @close="closeModal" class="calendar-modal">
-      <v-calendar ref="calendar" :edit="true"></v-calendar>
+      <calendar ref="calendar" :edit="true"></calendar>
     </el-dialog>
 
   </div>
 </template>
 <style scoped>
-.department {
-  width: 300px;
-  float: left;
-}
-
-.panel {
-  overflow: hidden;
-}
+  .department {
+    width: 300px;
+    float: left;
+  }
+  .panel {
+    overflow: hidden;
+  }
 </style>
 <style>
-.calendar-modal .el-dialog {
-  width: 1300px;
-  height: 700px;
-  ;
-}
+  .calendar-modal .el-dialog {
+    width: 1300px;
+    height: 700px;
+  }
 
-.department .el-tree {
-  overflow: auto;
-  height: 600px;
-}
 </style>
 <script>
-import Calendar from '@/components/Calendar';  //日历考勤
-import { getStore } from '@/utils/localStorage';
+import calendar from '@/components/Calendar';  //日历考勤
 export default {
   name: 'report',
   components: {
-    'v-calendar': Calendar
+    calendar
   },
   data() {
     let date = new Date();
@@ -73,27 +83,38 @@ export default {
       },
       modal: false,
       button: [],
+      departCascader: [],  // 部门树
       form: {
         month: date.getFullYear() + '-' + (month.length == 1 ? '0' + month : month),
         name: '',
-        depId: 1
+        depId: []
       }
     };
   },
   created() {
     this.getList();
-
+    this.getDepartment();
   },
   mounted() {
-    //获取当前用户看到的按钮
-    Utils.getButton((data) => {
+
+    this.getButton((data) => { //获取当前用户看到的按钮
       this.button = data;
     });
 
   },
   methods: {
-    treeClick(a) {
-      this.form.depId = a.id;
+    // treeClick(a) {
+    //   this.form.depId = a.id;
+    // },
+    getDepartment() { // 获取部门树
+      this.ajax({
+        url: '/authority/dep/tree/list',
+        success(data, $this) {
+          if (data.code == "success") {
+            $this.departCascader = $this.delTree(data.content);
+          }
+        }
+      });
     },
     getMonth(month) {
       this.form.month = month;
@@ -148,11 +169,15 @@ export default {
       }
     },
     getList() {
-      let month = (((this.form.month).toString()).split(' ')[0]).split('-');
-      let params = this.form;
       const $this = this;
+      const { month, name, depId } = this.form;
+      let params = {
+        month,
+        name,
+        depId: depId[depId.length - 1]
+      };
       this.tableList({
-        url: '/cwa/attendance/att/sub/list',
+        url: '/cwa/attendance/atten/list',
         data: Utils.filterObjectNull(params),
         columns: [{
           name: "姓名",
@@ -167,7 +192,7 @@ export default {
           name: '正常',
           value: 'normal'
         }, {
-          name: '加班',
+          name: '周末加班',
           value: 'overtime'
         }, {
           name: '节假日加班',
@@ -198,7 +223,7 @@ export default {
               name: '详情',
               click(row) {
                 $this.modal = true;
-                $this.getType(row.id);
+                $this.getType(row.userId);
               }
             }];
           }

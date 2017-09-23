@@ -1459,6 +1459,11 @@ export default {
       $('.honour-synopsis').stop().fadeOut(100);
       $(this).find('.person-honour-dpart').css('color', 'rgba(1, 1, 1, .8)');
     });
+    $(".honour-synopsis").niceScroll({
+      cursorcolor:"rgba(0, 0, 0, 0.2)",
+      cursorwidth:"5px",
+      cursorborderradius: 5
+    });
   }
 };
 </script>

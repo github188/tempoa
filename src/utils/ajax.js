@@ -33,7 +33,6 @@ export default function(
     })
     .catch(error => {
       if (error.response) {
-        console.error("response", error.response);
       } else if (error.request) {
         if(extremely){
           this.errorTips("服务器异常!");
@@ -42,8 +41,8 @@ export default function(
         extremely = false;
 
       } else {
-        console.error("Error", error.message);
+        // console.error("Error", error.message);
       }
-      console.error("Config", error.config);
+      // console.error("Config", error.config);
     });
 }

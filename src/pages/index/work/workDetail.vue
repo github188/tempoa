@@ -6,7 +6,7 @@
       <el-breadcrumb-item>详情</el-breadcrumb-item>
     </el-breadcrumb>
 
-    <div class="order-detail">
+    <div class="order-detail" :style="{'min-height': sideHeight+'px'}">
       <h2 class="order-title">{{title}}</h2>
       <div class="order-box order-detail-header">
         <img class="user-avatar" :src="getAvatar(this.userInfo)">
@@ -18,11 +18,20 @@
       </div>
 
       <div class="order-box order-detail-container">
-
+        <ul v-if="type == 1">
+          <askForLeave :details="details"></askForLeave>
+        </ul>
+         <ul v-if="type == 2">
+          <overTime :details="details"></overTime>
+        </ul>
+        <ul v-if="type == 3">
+          <outOff :details="details"></outOff>
+        </ul>
         <ul v-if="type == 4">
-          <!-- 合同相关信息 -->
           <contract :details="details"></contract>
-          <contractApprove ref="contractApprove"></contractApprove>
+        </ul>
+        <ul v-if="type == 5">
+          <beOut :details="details"></beOut>
         </ul>
       </div>
 
@@ -54,7 +63,7 @@
       </template>
 
     </div>
-    <div class="approve-box">
+    <div class="approve-box" v-if="type!=5">
       <div class="approve-record">审批记录</div>
       <div id="approveResult"></div>
       <ul class="approve-record-list" id="processLine">
@@ -87,6 +96,10 @@
 
       </ul>
     </div>
+    <contractApprove ref="contractApprove" @reStart="approveAction"></contractApprove>
+    <askForLeaveApprove ref="askForLeaveApprove" @reStart="approveAction"></askForLeaveApprove>
+    <overTimeApprove ref="overTimeApprove" @reStart="approveAction"></overTimeApprove>
+    <outOffApprove ref="outOffApprove" @reStart="approveAction"></outOffApprove>
   </div>
 </template>
 <style>
@@ -195,7 +208,6 @@
 }
 
 .order-detail-container {
-  min-height: 410px;
   padding: 10px 30px;
 }
 
@@ -312,16 +324,31 @@
 </style>
 
 <script>
-import contract from './components/contract';
-import contractApprove from '@/pages/contract/manage/approve';
+import contract from './components/contract';  //合同
+import contractApprove from './components/contractApprove';
+import askForLeave from './components/askForLeave';  //请假
+import askForLeaveApprove from './components/askForLeaveApprove';
+import overTime from './components/overTime';  //加班
+import overTimeApprove from './components/overTimeApprove';
+import outOff from './components/outOff';  //出差
+import outOffApprove from './components/outOffApprove';
+import beOut from './components/beOut';  //出差
 export default {
   name: 'workDetail',
   components: {
     contract,
-    contractApprove
+    contractApprove,
+    askForLeave,
+    askForLeaveApprove,
+    overTime,
+    overTimeApprove,
+    outOff,
+    outOffApprove,
+    beOut
   },
   data() {
     return {
+      sideHeight: 0,
       count: 0,   //图片数量限制为4
       message: null,  //审核意见
       approveImg: [],  //审核上传的图片
@@ -334,13 +361,16 @@ export default {
       file: [],
       title: '',
       btnList: null,  //流程处理的按钮
-      type: '',  //工单类型
+      type: '',  //工单类型   [1-请假, 2-加班，3-出差, 4-合同, 5-外出]
       id: '' //流程id
     };
   },
   created() {
     this.getProcessInfo();
     this.getBtn();
+  },
+  mounted(){
+    this.sideHeight = window.innerHeight - 160;
   },
   methods: {
     getBtn() {  //获取审批按钮
@@ -360,7 +390,6 @@ export default {
             }else{
               $this.btnList = null;
             }
-            console.log($this.btnList);
           }
         }
       });
@@ -419,10 +448,17 @@ export default {
       this.approveAction(0);
     },
     approveRestart(){  //重新发起审批
-      // this.approveAction(2);
-
+      if(this.type == 1){
+        this.$refs.askForLeaveApprove.openModal(this.details);
+      }
+      if(this.type == 2){
+        this.$refs.overTimeApprove.openModal(this.details);
+      }
+      if(this.type == 3){
+        this.$refs.outOffApprove.openModal(this.details);
+      }
       if(this.type == 4){
-        this.$refs.contractApprove.openModal();
+        this.$refs.contractApprove.openModal(this.details);
       }
     },
     approveEnd(){  //结束流程
@@ -445,8 +481,6 @@ export default {
       }else{
         params.opinion = this.message;
       }
-
-
       if (this.type == 4) {  //合同处理
         url = '/ctm/contract/exmine';
       } else if (this.type == 1) {  //请假

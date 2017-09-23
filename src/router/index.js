@@ -16,9 +16,10 @@ import ContractManage from '@/pages/contract/manage/'; //合同管理页面
 import ContractSetting from '@/pages/contract/setting/'; //合同设置页面
 
 import Attendance from '@/pages/attendance/'; //考勤管理入口
-import AttendanceReport from '@/pages/attendance/report/'; //考勤报表
+import AttendanceReport from '@/pages/attendance/report/'; //考勤统计
 import AttendanceSetting from '@/pages/attendance/setting/'; //考勤设置
-import AttendanceDepartmentReport from '@/pages/attendance/department/'; //部门考勤报表
+import AttendanceApprove from '@/pages/attendance/approve/'; //考勤审批单
+import AttendancePunch from '@/pages/attendance/punch/'; //打卡统计
 
 import Affairs from '@/pages/affairs/'; //人事平台入口
 import AffairsContact from '@/pages/affairs/contacts/'; //通讯录
@@ -55,8 +56,9 @@ export {
     WorkDetail,
     Attendance,
     AttendanceReport,
-    AttendanceDepartmentReport,
+    AttendanceApprove,
     AttendanceSetting,
+    AttendancePunch,
     Affairs,
     AffairsContact,
     AffairsAttendance,
@@ -67,5 +69,4 @@ export {
     Contract,
     ContractManage,
     ContractSetting
-
 };

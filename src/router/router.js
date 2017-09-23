@@ -21,8 +21,9 @@ import {
   WorkDetail,
   Attendance,
   AttendanceReport,
-  AttendanceDepartmentReport,
+  AttendanceApprove,
   AttendanceSetting,
+  AttendancePunch,
   Affairs,
   AffairsContact,
   AffairsAttendance,
@@ -59,7 +60,7 @@ let attendanceManage = [
     path: "report",
     name: "attendanceReport",
     component: AttendanceReport,
-    meta: { title: "考勤报表" }
+    meta: { title: "考勤统计" }
   },
   {
     path: "setting",
@@ -68,10 +69,16 @@ let attendanceManage = [
     meta: { title: "考勤设置" }
   },
   {
-    path: "department",
-    name: "department",
-    component: AttendanceDepartmentReport,
-    meta: { title: "部门考勤报表" }
+    path: "approve",
+    name: "approve",
+    component: AttendanceApprove,
+    meta: { title: "考勤审批单" }
+  },
+  {
+    path: "punch",
+    name: "punch",
+    component: AttendancePunch,
+    meta: { title: "打卡统计" }
   }
 ];
 

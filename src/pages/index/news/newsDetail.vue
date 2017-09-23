@@ -24,7 +24,8 @@
           </div>
           <!--内容-->
           <div class="news-substance" v-html="detail.content"></div>
-          <a title="附件下载" class="file-download" :href="domain + '/news/attachment/'+ detail.attachmentId +'/download'" v-if="detail.attachmentId && detail.attachmentId != 'false'"><i class="el-icon-document" style="padding-right:10px;"></i>{{detail.attachmentName}}</a>
+          <a title="附件下载" class="file-download" :href="domain + '/news/attachment/'+ detail.attachmentId +'/download'" v-if="detail.attachmentId && detail.attachmentId != 'false'">
+            <i class="el-icon-document" style="padding-right:10px;"></i>{{detail.attachmentName}}</a>
           <div class="comments-area">
             <div class="comments-num">
               <b class="comments-amount">{{commentCount}}</b>
@@ -77,12 +78,14 @@
   max-width: 1440px;
   margin: 0 auto;
 }
-.file-download{
-    display: block;
-    height: 60px;
-    line-height: 60px;
-    font-size: 16px;
+
+.file-download {
+  display: block;
+  height: 60px;
+  line-height: 60px;
+  font-size: 16px;
 }
+
 .container {
   max-width: 1440px;
   min-width: 1150px;
@@ -355,6 +358,12 @@
   display: none;
 }
 </style>
+<style>
+.news-content img {
+  max-width: 100%;
+}
+</style>
+
 
 <script>
 export default {

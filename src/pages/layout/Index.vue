@@ -3,13 +3,13 @@
     <v-header></v-header>
     <input class="z-hide" type="checkbox" id="toggleMenu">
     <div class="wrap">
-      <v-side></v-side>
-      <router-view class="content"></router-view>
+      <v-side ref="side"></v-side>
+      <router-view class="content" :style="{'min-height': sideHeight+'px'}"></router-view>
     </div>
   </div>
 </template>
 
-<style>
+<style scoped>
 .content {
   background: #eee;
   margin-top: 59px;
@@ -45,11 +45,26 @@ export default {
     'v-header': Header,
     'v-side': Side
   },
+  data(){
+    return {
+      sideHeight: 0
+    };
+  },
+  mounted(){
+    this.sideHeight = this.$refs.side.$el.clientHeight - 78;
+  },
   beforeRouteEnter(to, from, next) {
     if (to.params && to.params.id && to.params.name) {
       setStore('menuParmas', to.params);
     }
     next();
+  },
+  updated(){
+    $(".el-table__body-wrapper").niceScroll({
+      cursorcolor:"rgba(125, 125, 125, 0.7)",
+      cursorwidth:"5px",
+      cursorborderradius: 5
+    });
   }
 };
 

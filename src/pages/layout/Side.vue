@@ -11,19 +11,38 @@
   				</router-link>
   			</li> -->
 
-      <!-- <li>
+        <li>
   				<router-link to="/attendance/report" data-id="1501039773776563">
-  					<span>考勤报表</span>
+  					<span>考勤统计</span>
   				</router-link>
   			</li>
+
   			<li>
   				<router-link to="/attendance/setting" data-id="1501039889775823">
   					<span>考勤设置</span>
   				</router-link>
   			</li>
-  			<li>
-  				<router-link to="/attendance/department" data-id="1502696529259506">
-  					<span>部门考勤</span>
+
+        <li>
+  				<router-link to="/attendance/approve" data-id="1505112351336567">
+  					<span>考勤审批单</span>
+  				</router-link>
+  			</li>
+
+        <li>
+  				<router-link to="/attendance/punch" data-id="1505112351336567">
+  					<span>打卡统计</span>
+  				</router-link>
+  			</li>
+
+  			<!-- <li>
+  				<router-link to="/affairs/attendance" data-id="1501494080731695">
+  					<span>我的考勤</span>
+  				</router-link>
+  			</li>
+        <li>
+  				<router-link to="/affairs/contacts" data-id="1501494677601161">
+  					<span>通讯录</span>
   				</router-link>
   			</li> -->
 
@@ -33,7 +52,7 @@
         </router-link>
       </li> -->
 
-      <li>
+      <!-- <li>
         <router-link to="/project/manage" data-id="1493089982195835">
           <span>项目</span>
         </router-link>
@@ -43,7 +62,7 @@
         <router-link to="/project/demand" data-id="1493090013334368">
           <span>需求</span>
         </router-link>
-      </li>
+      </li> -->
 
 
 

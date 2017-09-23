@@ -1,4 +1,4 @@
-// 发起合同审批
+// 重新发起合同审批
 <template>
   <div>
     <el-dialog title="
@@ -174,8 +174,9 @@ export default {
       this.$refs.form.validate((valid) => {
         if (valid) {
           this.disable = true;
-          const { ctmName, cusName, ctmAttr, amount, projectId, remark, fileList, startTime, endTime } = this.form;
+          const { ctmName, cusName, ctmAttr, amount, projectId, remark, fileList, startTime, endTime, id } = this.form;
           const params = {
+            id,
             ctmName,
             cusName,
             ctmAttr,
@@ -187,15 +188,14 @@ export default {
             list: fileList
           };
           this.ajax({
-            url: '/ctm/contract/create',
-            type: 'post',
+            url: '/ctm/contract/update',
+            type: 'put',
             data: Utils.filterObjectNull(params),
             success(data, $this) {
               if (data.code == 'success') {
                 $this.successTips();
                 $this.modal = false;
-                $this.$refs.upload.clearFiles();
-                $this.$refs.form.resetFields();
+                $this.$emit('reStart', 2);   //调起重新发起审批接口
               } else {
                 $this.errorTips(data.message);
               }
@@ -210,7 +210,7 @@ export default {
       for (let i = 0; i < list.length; i++) {
         this.form.fileList.push({
           name: list[i].name,
-          id: list[i].response.content.split('.')[0]
+          id: list[i].id ||　list[i].response.content.split('.')[0]
         });
       }
     },
@@ -240,7 +240,6 @@ export default {
           }
         }
       });
-
     },
     getType(obj) {  //获取合同类型
       this.ajax({
@@ -259,9 +258,24 @@ export default {
       this.getProject();
       this.getType();
       this.modal = true;
+      const { department, salesmanName } = this.form;
+      let tempFile = [];
+      let file = details.file;
+      this.form = details;
+      this.form.department = department;
+      this.form.salesmanName = salesmanName;
+      for(let i = 0; i < file.length; i++){
+        tempFile.push({
+          name: file[i].name,
+          id: file[i].id
+        });
+      }
+      this.form.fileList = tempFile;
     }
-  }
+  },
+  props: ['reStart']
 };
 </script>
+
 
 

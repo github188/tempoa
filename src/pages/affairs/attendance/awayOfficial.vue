@@ -106,6 +106,7 @@ export default {
       },
       rules: {
         timeLength: [{
+          validator: this.checkTime,
           required: true,
           message: '时长不能为空!'
         }],
@@ -164,19 +165,26 @@ export default {
         let END = (endDate).toString().split(' ')[0] + ' ' + endTime;
         this.startDate = new Date(START).getTime();
         this.endDate = new Date(END).getTime();
-        this.ajax({
-          url: '/cwa/leave/timelong',
+        this.$refs.form.validateField('timeLength');
+      }
+    },
+    checkTime(rule, value, callback){
+       this.ajax({
+          url: '/cwa/overtime/timelong',
           data: {
             starttime: this.startDate,
             endtime: this.endDate
           },
           success(data, $this) {
             if (data.code == 'success') {
+              callback();
               $this.form.timeLength = data.content;
+            }else{
+              $this.errorTips('服务异常，时长计算失败!');
+              $this.countTime();
             }
           }
         });
-      }
     },
     submit() {
       this.$refs.form.validate((valid) => {

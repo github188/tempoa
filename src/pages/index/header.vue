@@ -289,19 +289,14 @@ export default {
       this.menu = false;
     },
     logOut() {
-
-      this.$confirm('您确定要退出登录吗?', '退出确认', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        customClass: 'log-out-confirm common-confirm',
-        type: 'warning'
-      }).then(() => {
-        Utils.logOut();
-      }).catch(() => {
-
+      this.confirmTips({
+        title: '退出确认',
+        content: '您确定要退出登录吗?',
+        submit(){
+          Utils.logOut();
+        }
       });
     },
-
     getEmailNum() {  //獲取郵箱唯獨數量
       this.ajax({
         url: '/authority/user/mail/toread',

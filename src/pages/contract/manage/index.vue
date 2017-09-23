@@ -9,24 +9,19 @@
         <el-form-item label="发起人：">
           <el-input v-model="form.userName"></el-input>
         </el-form-item>
-
         <el-form-item label="合同类型：">
           <v-code codeType="ctm_attr" @change="getType"></v-code>
         </el-form-item>
-
         <el-form-item label="合同名称：">
           <el-input placeholder="名称/编号" v-model="form.key"></el-input>
         </el-form-item>
-
         <div></div>
-
         <el-form-item label="归属部门：">
           <el-select @change="changeDapartTop" v-model="depart.departmantTop" placeholder="请选择一级部门" style="width:160px">
             <el-option v-for="(item, index) in depart.top" :key="index" :label="item.name" :value="item.id">
             </el-option>
           </el-select>
         </el-form-item>
-
         <el-form-item label="">
           <el-select @change="changeDapartMiddle" v-model="depart.departmantMiddle" placeholder="请选择二级部门" style="width:160px">
             <el-option v-for="(item, index) in depart.middle" :key="index" :label="item.name" :value="item.id">
@@ -34,28 +29,22 @@
           </el-select>
           </el-select>
         </el-form-item>
-
         <el-form-item label="">
           <el-select @change="changeDapartBottom" v-model="depart.departmantBottom" placeholder="请选择三级部门" style="width:160px">
             <el-option v-for="(item, index) in depart.bottom" :key="index" :label="item.name" :value="item.id">
             </el-option>
           </el-select>
         </el-form-item>
-
         <div></div>
-
         <el-form-item label="合同金额：">
           <el-input placeholder="最小金额" v-model="form.startAmount"></el-input>
           <el-input style="margin-left: 10px" placeholder="最大金额" v-model="form.endAmount"></el-input>
         </el-form-item>
-
       </el-form>
-
       <div class="search-box">
         <button type="button" @click="getList" class="btn btn-green">查询</button>
       </div>
     </v-panel>
-
     <v-panel title="合同列表">
       <div slot="button">
         <button v-for="(item, index) in button" :key="index" type="button" @click="submitBtn(item.url)" class="btn btn-space" style="margin-top:4px; margin-left: 10px;">{{item.name}}</button>
@@ -63,7 +52,6 @@
       </div>
       <div id="tableList"></div>
     </v-panel>
-
     <v-approve ref="approve"></v-approve>
     <v-template ref="tempate"></v-template>
   </div>
@@ -124,7 +112,6 @@ export default {
     });
   },
   methods: {
-
     changeDapartTop(code) {
       this.depart.departmantTop = code;
       this.depart.departmantMiddle = '';
@@ -133,7 +120,6 @@ export default {
       this.getDepart(1);
     },
     changeDapartMiddle(code) {
-
       this.depart.departmantMiddle = code;
       this.depart.departmantBottom = '';
       this.form.departmentId = code;
@@ -143,7 +129,6 @@ export default {
       this.depart.departmantBottom = code;
       this.form.departmentId = code;
     },
-
     getDepart(type) {  //获取部门
       this.ajax({
         url: '/authority/dep/list/pid',
@@ -163,7 +148,6 @@ export default {
           }
         }
       });
-
     },
     getType(obj) {  //获取合同类型
       this.form.ctmAttr = obj.value;
@@ -199,8 +183,14 @@ export default {
           operator(row) {
             return [{
               name: '详情',
-              click() {
-                console.log('click');
+              click(row) {
+                $this.$router.push({
+                  path: '/work/detail',
+                  query: {
+                    type: 4,
+                    id: row.processId
+                  }
+                });
               }
             }];
           }
@@ -208,7 +198,6 @@ export default {
         url: '/ctm/contract/list',
         data: Utils.filterObjectNull(params)
       });
-
     },
     getChoose(value) {
       this.form.status = value;
@@ -218,15 +207,12 @@ export default {
       if (url == 'export') { //导出数据
         let object = this.form;
         Utils.exportReport('/ctm/contract/export', object);
-
       } else if (url == 'startVerify') {  //发起审批
         this.$refs.approve.openModal();
-
       }
     },
     downTemplate() {  //下载模板
       this.$refs.tempate.openModal();
-
     }
   }
 };
