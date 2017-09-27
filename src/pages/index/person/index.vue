@@ -236,19 +236,22 @@ export default {
     };
   },
   created() {
-    this.ajax({   //获取用户信息
-      url: '/authority/user/' + u + '/detail',
-      success(data, $this) {
-        if (data.code == 'success') {
-          $this.info = data.content;
-          $this.phone = $this.info.phone;
-        }
-      }
-    });
-    this.upload.url = this.domain + '/authority/user/picture/head/upload';
+    this.getUserInfo();
 
   },
   methods: {
+    getUserInfo() {
+      this.ajax({   //获取用户信息
+        url: '/authority/user/' + u + '/detail',
+        success(data, $this) {
+          if (data.code == 'success') {
+            $this.info = data.content;
+            $this.phone = $this.info.phone;
+          }
+        }
+      });
+      this.upload.url = this.domain + '/authority/user/picture/head/upload';
+    },
     editInfo(info) {
       let params = info;
       params.id = u;
@@ -261,6 +264,7 @@ export default {
             $this.successTips('操作成功！');
             $this.status = false;
             $this.phone = info.phone;
+            $this.getUserInfo();
           }
         }
       });

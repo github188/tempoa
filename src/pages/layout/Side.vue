@@ -5,78 +5,12 @@
     </a>
 
     <ul class="menu-list">
-      <!-- <li v-for="(item, index) in menuList" :key="index">
-  				<router-link to="/attendance/department">
+      <li v-for="(item, index) in menuList" :key="index">
+  				<router-link :to="item.url" :data-id="item.id">
+          <!-- <router-link :to="{ path: item.url, query: { id: item.id }}"> -->
   					<span>{{item.name}}</span>
   				</router-link>
-  			</li> -->
-
-        <li>
-  				<router-link to="/attendance/report" data-id="1501039773776563">
-  					<span>考勤统计</span>
-  				</router-link>
   			</li>
-
-  			<li>
-  				<router-link to="/attendance/setting" data-id="1501039889775823">
-  					<span>考勤设置</span>
-  				</router-link>
-  			</li>
-
-        <li>
-  				<router-link to="/attendance/approve" data-id="1505112351336567">
-  					<span>考勤审批单</span>
-  				</router-link>
-  			</li>
-
-        <li>
-  				<router-link to="/attendance/punch" data-id="1505112351336567">
-  					<span>打卡统计</span>
-  				</router-link>
-  			</li>
-
-  			<!-- <li>
-  				<router-link to="/affairs/attendance" data-id="1501494080731695">
-  					<span>我的考勤</span>
-  				</router-link>
-  			</li>
-        <li>
-  				<router-link to="/affairs/contacts" data-id="1501494677601161">
-  					<span>通讯录</span>
-  				</router-link>
-  			</li> -->
-
-      <!-- <li>
-        <router-link to="/trends/newsManage" data-id="1493891929755783">
-          <span>新闻公告</span>
-        </router-link>
-      </li> -->
-
-      <!-- <li>
-        <router-link to="/project/manage" data-id="1493089982195835">
-          <span>项目</span>
-        </router-link>
-      </li>
-
-       <li>
-        <router-link to="/project/demand" data-id="1493090013334368">
-          <span>需求</span>
-        </router-link>
-      </li> -->
-
-
-
-      <!-- <li>
-  				<router-link to="/contract/manage" data-id="1497949460291559">
-  					<span>合同</span>
-  				</router-link>
-  			</li>
-  			<li>
-  				<router-link to="/contract/setting" data-id="1497957466761717">
-  					<span>合同设置</span>
-  				</router-link>
-  			</li> -->
-
     </ul>
   </div>
 </template>
@@ -174,9 +108,63 @@ export default {
     this.ajax({  //获取菜单
       url: '/authority/resource/user/resources?resourceId=' + menuParmas.id,
       success(data, $this) {
-        console.log(data, '获取菜单');
         if (data.code == 'success') {
-          $this.menuList = data.content;
+          const { content } = data;
+          let temp = [];
+          for(let i = 0; i < content.length; i++){
+            if(content[i].type == 1 && content[i].status == 0){
+              if(content[i].url == "/project/personManage.html"){  //人员管理
+                content[i].url = '/organize/personManage';
+              }
+              if(content[i].url == "/project/roleManage.html"){  //角色管理
+                content[i].url = '/organize/rolesManage';
+              }
+              if(content[i].url == "/project/menuManage.html"){  //菜单管理
+                content[i].url = '/organize/menuManage';
+              }
+              if(content[i].url == "/project/proManage.html"){  //项目管理
+                content[i].url = '/project/manage';
+              }
+              if(content[i].url == "/project/demandManage.html"){  //需求管理
+                content[i].url = '/project/demand';
+              }
+              if(content[i].url == "/project/newsManage.html"){  //OA首页
+                content[i].url = '/trends/newsManage';
+              }
+              if(content[i].url == "/project/projectContract.html"){  //项目合同
+                content[i].url = '/contract/manage';
+              }
+              if(content[i].url == "/project/contractSetting.html"){  //项目合同设置
+                content[i].url = '/contract/setting';
+              }
+
+              if(content[i].url == "/project/workAttendance.html"){  //考勤统计
+                content[i].url = '/attendance/report';
+              }
+              if(content[i].url == "/project/workAttendanceSetting.html"){  //考勤设置
+                content[i].url = '/attendance/setting';
+              }
+              if(content[i].url == "/project/punchClock.html"){  //打卡统计
+                content[i].url = '/attendance/punch';
+              }
+              if(content[i].url == "/project/approve.html"){  //考勤审批单
+                content[i].url = '/attendance/approve';
+              }
+              if(content[i].url == "/project/humanAttendance.html"){  //人事平台
+                content[i].url = '/affairs/attendance';
+              }
+              if(content[i].url == "/project/humanAffairs.html"){  //通讯录
+                content[i].url = '/affairs/contacts';
+              }
+
+              temp.push({
+                id: content[i].id,
+                url: content[i].url,
+                name: content[i].name
+              });
+            }
+          }
+          $this.menuList = temp;
         } else {
           this.$message({
             showClose: true,

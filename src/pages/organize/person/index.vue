@@ -626,7 +626,7 @@ export default {
           value: 'phone'
         }, {
           name: '操作',
-          width: 300,
+          width: 330,
           operator(row) {
             let status = 0;
             let statusName = '启用';

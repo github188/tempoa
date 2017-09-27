@@ -44,7 +44,7 @@
     </v-panel>
 
     <el-dialog title="考勤详情" :visible.sync="modal" size="small" @close="closeModal" class="calendar-modal">
-      <calendar ref="calendar" :edit="true"></calendar>
+      <calendar ref="calendar" @getList="getList" @getType="getType" :edit="true"></calendar>
     </el-dialog>
 
   </div>
@@ -88,19 +88,30 @@ export default {
         month: date.getFullYear() + '-' + (month.length == 1 ? '0' + month : month),
         name: '',
         depId: []
-      }
+      },
+      flag: true
     };
   },
   created() {
     this.getList();
     this.getDepartment();
   },
-  mounted() {
 
-    this.getButton((data) => { //获取当前用户看到的按钮
-      this.button = data;
-    });
-
+  updated(){
+    if(this.flag){
+      this.getButton((data) => { //获取当前用户看到的按钮
+      let { content } = data;
+        for(let i = 0; i < content.length; i++){
+          if(content[i].url == 'sendEmail' || content[i].url == 'exportReport'){
+            this.button.push({
+              url: content[i].url,
+              name: content[i].name
+            });
+          }
+        }
+        this.flag = false;
+      });
+    }
   },
   methods: {
     // treeClick(a) {
@@ -149,8 +160,8 @@ export default {
     submitReport(id) {  //发送考勤邮件或导出报表
       let object = this.form;
       if (id == 'exportReport') {  //导出
-        Utils.exportReport('/cwa/attendance/all/export', object);
-      } else if (id == 'sendEmail') {  //发送考勤邮件
+        this.downFile('/cwa/attendance/export');
+      }else if (id == 'sendEmail') {  //发送考勤邮件
         this.ajax({
           url: '/cwa/attendance/sendemail',
           data: {
@@ -159,10 +170,7 @@ export default {
           type: 'get',
           success(data, $this) {
             if (data.code == 'success') {
-              $this.$message({
-                type: 'success',
-                message: '发送成功！'
-              });
+              $this.successTips('发送成功!');
             }
           }
         });

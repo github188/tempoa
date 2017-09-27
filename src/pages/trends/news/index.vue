@@ -38,31 +38,22 @@
           <el-select style="width:100%" v-model="form.newsType" clearable>
             <el-option :value="0" label="新闻"></el-option>
             <el-option :value="1" label="公告"></el-option>
+            <el-option :value="2" label="分享"></el-option>
           </el-select>
         </el-form-item>
-         <el-form-item label="是否置顶：">
+        <el-form-item label="是否置顶：">
           <el-switch on-text="" off-text="" v-model="form.isTop"></el-switch>
         </el-form-item>
 
-        <el-form-item label="头图："id="postHead">
-          <el-upload
-            :action="uploadUrl"
-            :on-success="successPic"
-            :on-remove="removePic"
-            accept="image/*"
-            :file-list="picList"
-            list-type="picture-card">
+        <el-form-item label="头图：" id="postHead">
+          <el-upload :action="uploadUrl" :on-success="successPic" :on-remove="removePic" accept="image/*" :file-list="picList" list-type="picture-card">
             <i class="el-icon-plus"></i>
             <div slot="tip" class="el-upload__tip" style="display:inline-block; padding-left: 20px">此处添加的图片放置在首页展示(建议宽高比例2:1)</div>
           </el-upload>
         </el-form-item>
 
         <el-form-item label="附件：">
-          <el-upload
-            :on-success="successFile"
-            :on-remove="removeFile"
-            :file-list="fileList"
-            :action="uploadFileUrl">
+          <el-upload :on-success="successFile" :on-remove="removeFile" :file-list="fileList" :action="uploadFileUrl">
             <el-button size="small" type="primary">点击上传</el-button>
           </el-upload>
         </el-form-item>
@@ -84,7 +75,7 @@
     <el-dialog :title="'评论管理 ' + ('('+comments.list.length+ ')')" :visible.sync="comments.modal" size="tiny" id="commentModal">
       <el-collapse v-if="comments.list.length != 0">
         <el-collapse-item v-for="(item, index) in comments.list" :key="index" :name="index">
-           <template slot="title">
+          <template slot="title">
             <span>{{item.addPersonName}}</span>
             <span style="float: right; margin-right:20px">
               {{new Date(item.addTime).toString()}}
@@ -99,24 +90,29 @@
   </div>
 </template>
 <style>
-    #tableList a.operator {
-      display: inline-block;
-      width: 58px;
-    }
-    #postHead .el-upload-list--picture-card .el-upload-list__item{
-      width: 296px;
-    }
-    #postCreate .el-dialog__body, #postCreate .el-dialog__footer{
-      width: 800px;
-      margin:0 auto;
-    }
-    #commentModal .el-dialog{
-      width: 800px;
-    }
-    #commentModal .el-button--mini{
-      padding: 3px;
-      margin-left: 20px;
-    }
+#tableList a.operator {
+  display: inline-block;
+  width: 58px;
+}
+
+#postHead .el-upload-list--picture-card .el-upload-list__item {
+  width: 296px;
+}
+
+#postCreate .el-dialog__body,
+#postCreate .el-dialog__footer {
+  width: 800px;
+  margin: 0 auto;
+}
+
+#commentModal .el-dialog {
+  width: 900px;
+}
+
+#commentModal .el-button--mini {
+  padding: 3px;
+  margin-left: 20px;
+}
 </style>
 
 <script>
@@ -137,7 +133,7 @@ export default {
       modal: false,
       type: true,   //添加模式,反之编辑模式
       title: '新增文章',
-      comments:{  //评论
+      comments: {  //评论
         modal: false,
         list: [],
         newsId: ''  //当前评论所在的新闻id
@@ -153,32 +149,38 @@ export default {
         attachmentName: '',// 附件地址
         attachmentId: '', //附件id
       },
-      picList:[],
+      picList: [],
       fileList: [],  //附件列表
       config: {
-        language: "zh_cn",
+        language:  "zh_cn",
         height: 500,
         placeholderText: '写点什么吧...',
         imageUploadURL: '',
-        imageManagerLoadParams: {user_id: 4219762},
-        toolbarButtons: [ 'bold', 'italic', 'underline', 'strikeThrough', '|', 'fontFamily', 'fontSize', 'color', '|', 'paragraphFormat', 'align', 'formatOL', 'formatUL', 'outdent', 'indent', 'quote', '-', 'insertLink', 'insertImage', 'insertVideo', 'insertTable', '|', 'emoticons', 'insertHR', 'clearFormatting', '|', 'spellChecker', '|', 'undo', 'redo', 'fullscreen'],
+        imageAltButtons: ['imageBack'],
+        imageEditButtons: ['imageReplace', 'imageAlign', 'imageCaption', 'imageRemove'],
+        imageDefaultWidth: 680,
+        imageEditButtons: ['imageDisplay', 'imageAlign', 'imageInfo', 'imageRemove'],
+        toolbarButtons: ['bold', 'italic', 'underline', 'strikeThrough', '|', 'fontFamily', 'fontSize', 'color', '|', 'paragraphFormat', 'align', 'formatOL', 'formatUL', 'outdent', 'indent', 'quote', '-', 'insertLink', 'insertImage', 'insertTable', '|', 'emoticons', 'insertHR', 'clearFormatting', '|', 'spellChecker', '|', 'undo', 'redo', 'fullscreen'],
         events: {
-          'froalaEditor.initialized': function () {
+          'froalaEditor.initialized': function() {
 
           },
           'froalaEditor.image.error': function(e, editor, error, response) {
-            console.log(e, editor, error, response);
-            $('.fr-error').remove();
+              console.log(error, response);
+            // $('.fr-error').remove();
           },
-          'froalaEditor.image.uploaded': (e, editor, response)=>{
-            const picId = (JSON.parse(response)).content.picId;
-            const url = this.domain + "/news/picture/content/"+ picId +"/download";
-            editor.image.insert(url);
+          'froalaEditor.image.inserted': (e, editor, $img, response) => {
+              console.log($img, response);
+          },
+          'froalaEditor.image.uploaded': (e, editor, response) => {
+            // const picId = (JSON.parse(response)).content.picId;
+            // const url = this.domain + "/news/picture/content/" + picId + "/download";
+            // editor.image.insert(url);
           }
         }
       },
       uploadPicUrl: '',  //头图上传地址
-      uploadFileUrl: '' ,  //附件上传地址
+      uploadFileUrl: '',  //附件上传地址
       rules: {
         newsTitle: [{
           required: true,
@@ -192,7 +194,7 @@ export default {
           required: true,
           message: '类型不能为空!'
         }],
-        content:[{
+        content: [{
           required: true,
           message: '正文不能为空!'
         }]
@@ -222,7 +224,7 @@ export default {
         columns: [{
           name: '类型',
           render(row) {
-            return ['新闻', '公告'][row.newsType];
+            return ['新闻', '公告', '分享'][row.newsType];
           }
         }, {
           name: '标题',
@@ -304,46 +306,46 @@ export default {
                   $this.modal = true;
                   $this.title = '编辑文章';
                   $this.ajax({
-                    url: '/news/'+ row.id +'/detail',
-                    success(data){
-                      if(data.code == 'success'){
+                    url: '/news/' + row.id + '/detail',
+                    success(data) {
+                      if (data.code == 'success') {
                         $this.picList = [];
                         $this.fileList = [];
-                        const {id, isTop, newsTitle, newsAuthor, newsType, content, pictureId, attachmentName, attachmentId } = data.content;
+                        const { id, isTop, newsTitle, newsAuthor, newsType, content, pictureId, attachmentName, attachmentId } = data.content;
                         $this.form = {
-                          id: id,
-                          newsTitle: newsTitle,
-                          newsAuthor: newsAuthor,
-                          newsType: newsType,
-                          content: content,
-                          pictureId: pictureId,
-                          attachmentName: attachmentName,
-                          attachmentId: attachmentId,
+                          id,
+                          newsTitle,
+                          newsAuthor,
+                          newsType,
+                          content,
+                          pictureId,
+                          attachmentName,
+                          attachmentId,
                           isTop: false
                         };
-                        $this.form.isTop = (isTop?false:true);
-                        if(pictureId && pictureId != "false"){
+                        $this.form.isTop = (isTop ? false : true);
+                        if (pictureId && pictureId != "false") {
                           $this.picList = [{
                             name: '',
-                            url:  $this.domain + '/news/picture/top/' + content.pictureId + '/download'
+                            url: $this.domain + '/news/picture/top/' + content.pictureId + '/download'
                           }];
                         }
-                        if(attachmentId && attachmentId != 'false'){
+                        if (attachmentId && attachmentId != 'false') {
                           $this.fileList = [{
                             name: attachmentName,
-                            url:  $this.domain + '/news/picture/top/' + content.attachmentId + '/download'
+                            url: $this.domain + '/news/picture/top/' + content.attachmentId + '/download'
                           }];
                         }
                       }
                     }
                   });
-                }else{
+                } else {
                   $this.errorTips('请先取消发布再修改!');
                 }
               }
-            },{
+            }, {
               name: '评论管理',
-              click(row){
+              click(row) {
                 $this.commentsRead(row.id);
               }
             }];
@@ -351,74 +353,74 @@ export default {
         }]
       });
     },
-    successPic(response, file){
+    successPic(response, file) {
       this.form.pictureId = (response.content.picId).split('.')[0];
     },
-    removePic(){
+    removePic() {
       this.form.pictureId = false;
     },
-    successFile(response, file){
+    successFile(response, file) {
       this.form.attachmentId = (response.content.picId).split('.')[0];
       this.form.attachmentName = file.name;
     },
-    removeFile(){
+    removeFile() {
       this.form.attachmentId = false;
       this.form.attachmentName = false;
     },
-    commentsRead(id){
+    commentsRead(id) {
       this.comments.modal = true;
       this.ajax({
-        url: '/news/comment/'+ id +'/12/list',
-        success(data, $this){
-          if(data.code == 'success'){
+        url: '/news/comment/' + id + '/12/list',
+        success(data, $this) {
+          if (data.code == 'success') {
             $this.comments.list = data.content;
             $this.comments.newsId = id;
           }
         }
       });
     },
-    commentsManage(id, state, e){
+    commentsManage(id, state, e) {
       e.stopPropagation();
       const status = state == 1 ? 0 : 1;
       this.ajax({
-        url: '/news/comment/'+ id +'/'+ status +'/hide',
+        url: '/news/comment/' + id + '/' + status + '/hide',
         type: 'put',
-        success(data, $this){
-          if(data.code == 'success'){
+        success(data, $this) {
+          if (data.code == 'success') {
             $this.successTips();
             $this.commentsRead($this.comments.newsId);
-          }else{
+          } else {
             $this.errorTips();
           }
         }
       });
 
     },
-    submit(){
-      this.$refs.postForm.validate((valid)=>{
-        if(valid){
+    submit() {
+      this.$refs.postForm.validate((valid) => {
+        if (valid) {
           this.disable = true;
           let params = Utils.filterObjectNull(this.form);
           let type = 'put';
-          if(this.type){
+          if (this.type) {
             type = 'post';
           }
 
-          if(params.isTop){
+          if (params.isTop) {
             params.isTop = 0;
-          }else{
+          } else {
             params.isTop = 1;
           }
           this.ajax({
             url: '/news',
             type: type,
             data: params,
-            success(data, $this){
-              if(data.code == 'success'){
+            success(data, $this) {
+              if (data.code == 'success') {
                 $this.successTips('操作成功！');
                 $this.modal = false;
                 $this.getList();
-              }else{
+              } else {
                 $this.errorTips(data.message);
               }
             }

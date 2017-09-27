@@ -8,6 +8,7 @@ export default function(
     type = "get",
     url = "",
     data = {},
+    responseType = 'json',
     header = { authorization: getStore("authorization") },
     success = null,
     error = null
@@ -20,7 +21,7 @@ export default function(
     url: url,
     headers: header,
     method: type,
-    timeout: 10000
+    timeout: 20000
   };
   axios(config)
     .then(response => {
@@ -28,7 +29,7 @@ export default function(
         Utils.logOut();
         return;
       }
-      success(response.data, this);
+      success(response.data, this, response);
       this.disable = false;
     })
     .catch(error => {
@@ -41,7 +42,8 @@ export default function(
         extremely = false;
 
       } else {
-        // console.error("Error", error.message);
+        // this.errorTips("服务器异常!");
+        console.error("Error", error.message);
       }
       // console.error("Config", error.config);
     });

@@ -98,7 +98,7 @@
         </el-tab-pane>
         <el-tab-pane name="myapply">
           <span slot="label">
-            <i class="icon icon-myapply"></i> 我申请的</span>
+            <i class="icon icon-myapply"></i> 我的申请</span>
           <div v-if="applyList.length">
             <ul class="work-box">
               <li v-for="(item, index) in applyList" :key="index">

@@ -2,11 +2,11 @@
   <div class="content">
     <el-breadcrumb separator="/">
       <el-breadcrumb-item :to="{ path: '/index' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item :to="{ path: '/news/list', query: {type: detail.newsType} }">{{['新闻','公告'][detail.newsType]}}</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/news/list', query: {type: detail.newsType} }">{{['新闻','公告','分享'][detail.newsType]}}</el-breadcrumb-item>
       <el-breadcrumb-item>详情</el-breadcrumb-item>
     </el-breadcrumb>
     <el-dialog v-model="modal" size="small">
-      <img width="100%" :src="getAvatar(commentsUser)" alt="">
+      <img width="100%" :src="getAvatar(commentsUser, {normal: true})" alt="">
     </el-dialog>
     <div class="container">
       <div class="news-detail" v-if="detail.newsTitle">
@@ -18,7 +18,7 @@
         </div>
         <div class="news-content">
           <div class="news-category">
-            <span class="news-category-tag">{{['新闻','公告'][detail.newsType]}}</span>
+            <span class="news-category-tag">{{['新闻','公告','分享'][detail.newsType]}}</span>
             <span class="news-time">{{new Date(detail.publishDate).toString()}}</span>
             <span class="new-author">撰稿人:&nbsp;{{detail.newsAuthor}}</span>
           </div>
@@ -38,7 +38,10 @@
               <div class="comments-box">
                 <textarea ref="textarea" v-model="text" placeholder="写下你的评论..." class="comments-text"></textarea>
                 <div class="submit-box">
-                  <button type="button" class="comments-submit" @click="toComments">评论</button>
+                  <button type="button" class="comments-submit" :disabled="disable" v-if="disable">
+                    <i class="el-icon-loading"></i>
+                  </button>
+                  <el-button type="success" class="comments-submit" :disabled="disable" v-else  @click="toComments">评论</el-button>
                 </div>
               </div>
             </div>
@@ -233,6 +236,7 @@
   font-size: 16px;
   color: #000;
   padding: 0;
+  padding-bottom: 2px;
   padding-left: 12px;
   line-height: 35px;
   outline: none;
@@ -472,12 +476,10 @@ export default {
     },
     toComments() {
       if (this.text.trim().length == 0) {
-        this.$message({
-          message: '评论内容不能为空！',
-          type: 'info'
-        });
+        this.errorTips('评论内容不能为空!');
         return;
       }
+      this.disable = true;
       this.ajax({
         url: '/news/comment',
         type: 'post',
@@ -489,15 +491,9 @@ export default {
           if (data.code == "success") {
             $this.getComments();
             $this.text = '';
-            $this.$message({
-              message: '评论成功！',
-              type: 'success'
-            });
+            $this.successTips('评论成功!');
           } else {
-            this.$message({
-              message: '评论失败！',
-              type: 'error'
-            });
+            $this.errorTips(data.message);
           }
         }
       });

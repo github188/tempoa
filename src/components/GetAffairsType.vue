@@ -4,15 +4,11 @@
     </el-option>
   </el-select>
 </template>
-<style scoped>
-
-</style>
 
 <script>
 export default {
   name: 'getCode',
   data() {
-    console.log(this.filter);
     return {
       code: [],
       result: ''

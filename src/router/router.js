@@ -44,13 +44,13 @@ let contractManage = [
     path: "manage",
     name: "contractManage",
     component: ContractManage,
-    meta: { title: "合同管理" }
+    meta: { title: "项目合同" }
   },
   {
     path: "setting",
     name: "contractSetting",
     component: ContractSetting,
-    meta: { title: "合同设置" }
+    meta: { title: "项目合同设置" }
   }
 ];
 

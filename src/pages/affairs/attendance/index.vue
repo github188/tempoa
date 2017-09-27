@@ -11,7 +11,6 @@
             <button type="button" @click="openOvertime" class="btn btn-space">+&nbsp;加班</button>
             <button type="button" @click="openAway" class="btn btn-space">+&nbsp;出差</button>
           </div>
-
         </el-form> -->
 
       <div class="human-attendance">
@@ -63,7 +62,7 @@
           </li>
           <li>
             <p>加班</p>
-            <div class="human-calendar-count">{{report &&　report.overtime + report　&& report.overtimeHoli}}</div>
+            <div class="human-calendar-count">{{(report.overtime) + (report.overtimeHoli)}}</div>
           </li>
           <li>
             <p>出差</p>
@@ -311,7 +310,21 @@ export default {
         }
       },
       summary: {},  //考勤总结
-      report: {}, //考勤报表
+      initReport: {
+        travel: 0,
+        outside: 0,
+        overtime: 0,
+        overtimeHoli: 0,
+        leave0:0,
+        leave1: 0,
+        leave2: 0,
+        leave3:0,
+        leave4:0
+      },
+      report: { //考勤报表
+        overtime: 0,
+        overtimeHoli: 0,
+      },
       noChoose: true,  //大于本月不能选择
       form: {
         monthHead: date.getMonth() + 1,
@@ -371,11 +384,10 @@ export default {
         success(data, $this){
           if(data.code == 'success'){
             $this.summary = data.content;
-            $this.report = data.content.report || {};
+            $this.report = data.content.report || $this.initReport;
           }
         }
       });
-
     },
     openLeavel() {
       this.$refs.leaveModal.openModal();

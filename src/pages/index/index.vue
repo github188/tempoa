@@ -1,11 +1,6 @@
 <template>
   <div class="wrap">
     <v-header></v-header>
-    <!-- <ul>
-    					<li v-for="item in menuList">
-    						<router-link :to='{name:"project", params:{id: item.id, name: item.name}}'>{{item.name}}</router-link>
-    					</li>
-    				</ul> -->
     <div class="content index-content">
       <div class="content-side">
         <div class="person-new">
@@ -30,68 +25,19 @@
         <div class="entry-menu">
           <ul>
             <li v-for="(item, index) in menuList" :key="index">
-              <router-link :to="{name:'attendanceReport', params:{id: item.id, name: item.name}}">
+              <router-link :to="{name: item.url, params:{id: item.id, name: item.name}}">
                 <em class="icon" :class="item.icon"></em>
                 <span>{{item.name}}</span>
                 <em class="icon-cell"></em>
               </router-link>
             </li>
-            <!--   <li>
-    		                            <a href="#">
-    		                                <em class="icon icon-finance"></em>
-    		                                <span>财务平台</span>
-    		                                <em class="icon-cell"></em>
-    		                            </a>
-    		                        </li>
-    		                        <li>
-    		                            <a href="#">
-    		                                <em class="icon icon-learn"></em>
-    		                                <span>学习平台</span>
-    		                                <em class="icon-cell"></em>
-    		                            </a>
-    		                        </li>
-    		                        <li>
-    		                            <a href="#">
-    		                                <em class="icon icon-client"></em>
-    		                                <span>客户关系管理平台</span>
-    		                                <em class="icon-cell"></em>
-    		                            </a>
-    		                        </li>
-    		                        <li>
-    		                            <a href="#">
-    		                                <em class="icon icon-contract"></em>
-    		                                <span>合同管理平台</span>
-    		                                <em class="icon-cell"></em>
-    		                            </a>
-    		                        </li>
-    		                        <li>
-    		                            <a href="#">
-    		                                <em class="icon icon-project"></em>
-    		                                <span>项目管理平台</span>
-    		                                <em class="icon-cell"></em>
-    		                            </a>
-    		                        </li>
-    		                        <li>
-    		                            <a href="#">
-    		                                <em class="icon icon-organize"></em>
-    		                                <span>组织架构管理平台</span>
-    		                                <em class="icon-cell"></em>
-    		                            </a>
-    		                        </li>
-    		                        <li>
-    		                            <a href="#">
-    		                                <em class="icon icon-oa"></em>
-    		                                <span>OA首页管理</span>
-    		                                <em class="icon-cell"></em>
-    		                            </a>
-    		                        </li>
-    		                        <li>
-    		                            <a href="#">
-    		                                <em class="icon icon-attendance"></em>
-    		                                <span>考勤管理</span>
-    		                                <em class="icon-cell"></em>
-    		                            </a>
-    		                        </li> -->
+            <li>
+              <a target="_blank" href="http://ecaray.learnnow.net.cn/app/user/userLogin/$">
+                <em class="icon icon-learn"></em>
+                <span>学习平台</span>
+                <em class="icon-cell"></em>
+              </a>
+            </li>
           </ul>
         </div>
       </div>
@@ -119,48 +65,30 @@
             </p>
           </div>
           <div class="operation box">
-            <ul>
-              <li v-for="(item, index) in fastEntry" :key="index">
-                <router-link :to="{name:'project', params:{id: item.id, name: item.name}}">
-                  <div :class="'operation-' + item.icon"></div>
-                  <span>{{item.name}}</span>
-                </router-link>
-              </li>
-              <!--<li>
-    		                                <a href="">
-    		                                    <div class="operation-extra "></div>
-    		                                    <span>加班</span>
-    		                                </a>
-    		                            </li>
-    		                            <li>
-    		                                <a href="">
-    		                                    <div class="operation-out"></div>
-    		                                    <span>出差</span>
-    		                                </a>
-    		                            </li>
-    		                            <li>
-    		                                <a href="">
-    		                                    <div class="operation-expense"></div>
-    		                                    <span>报销</span>
-    		                                </a>
-    		                            </li>
-    		                            <li>
-    		                                <a href="">
-    		                                    <div class="operation-client"></div>
-    		                                    <span>录客户</span>
-    		                                </a>
-    		                            </li>
-    		                            <li>
-    		                                <a href="">
-    		                                    <div class="operation-business"></div>
-    		                                    <span>录商机</span>
-    		                                </a>
-    		                            </li> -->
-            </ul>
-            <div class="slide-toggle">
-              <a class="active"></a>
-              <a></a>
-            </div>
+            <el-carousel trigger="click" :autoplay="false" arrow="never" height="340px">
+              <ul>
+                <el-carousel-item v-for="n in (Math.ceil(fastEntry.length/6))" :key="n">
+                  <li @click="fastEntryHandle(item.icon)" v-for="(item, index) in fastEntry" :key="index" v-if="index <= 6 && n == 1">
+                    <!-- <router-link :to="{name:'project', params:{id: item.id, name: item.name}}"> -->
+                    <a href="javascript:;">
+                      <div :class="'operation-' + item.icon"></div>
+                      <span>{{item.name}}</span>
+                    </a>
+                    <!-- </router-link> -->
+                  </li>
+
+                  <li @click="fastEntryHandle(item.icon)" v-for="(item, index) in fastEntry" :key="index" v-if="index > 6 && n == 2">
+                    <!-- <router-link :to="{name:'project', params:{id: item.id, name: item.name}}"> -->
+                    <a href="javascript:;">
+                      <div :class="'operation-' + item.icon"></div>
+                      <span>{{item.name}}</span>
+                    </a>
+                    <!-- </router-link> -->
+                  </li>
+                </el-carousel-item>
+              </ul>
+            </el-carousel>
+
           </div>
         </div>
         <div class="content-r">
@@ -177,6 +105,7 @@
                     <h2 class="top-line-title" id="topPublic">
                       <span style="position:relative; top:-3px" class="top-line-tag top-line-tag-news" v-if="stickNews.newsType == 0">新闻</span>
                       <span style="position:relative; top:-3px" class="top-line-tag top-line-tag-publish" v-if="stickNews.newsType == 1">公告</span>
+                      <span style="position:relative; top:-3px" class="top-line-tag top-line-tag-share" v-if="stickNews.newsType == 2">分享</span>
                       <router-link target="_blank" :to="{path: '/news/detail', query:{id: stickNews.id}}">{{stickNews.newsTitle}}</router-link>
                       <em class="tag-icon tag-icon-top">Top</em>
                       <span class="top-line-time" style="margin-top: 0;"> 2017-08-28 13:59:58</span>
@@ -190,6 +119,7 @@
                 <li class="top-line-title" v-for="(item, index) in topNews" :key="index">
                   <span class="top-line-tag top-line-tag-news" v-if="item.newsType == 0">新闻</span>
                   <span class="top-line-tag top-line-tag-publish" v-if="item.newsType == 1">公告</span>
+                  <span class="top-line-tag top-line-tag-share" v-if="item.newsType == 2">分享</span>
                   <router-link target="_blank" :to="{path: '/news/detail', query:{id: item.id}}">{{item.newsTitle}}</router-link>
                   <em class="tag-icon tag-icon-new" v-if="restTime(item.publishDate)">New</em>
                   <span class="top-line-time"> {{new Date(item.publishDate).toString()}}</span>
@@ -203,7 +133,7 @@
               <a href="/work/list">更多</a>
             </p>
 
-            <el-tabs class="tab-content">
+            <el-tabs class="tab-content" @tab-click="getWorkList">
               <el-tab-pane>
                 <span slot="label">我的待办&nbsp;
                   <span style="color: #01cd78">({{todoHandleLabel || 0}})</span>
@@ -223,7 +153,7 @@
                 </p>
                 </ul>
               </el-tab-pane>
-              <el-tab-pane label="我申请的" name="second">
+              <el-tab-pane label="我的申请" name="second">
                 <ul v-if="todoAsk.length">
                   <li v-for="(item, index) in todoAsk" :key="index">
                     <p>
@@ -245,7 +175,6 @@
         </div>
         <div class="honour">
           <p class="honour-title">亿车荣誉榜</p>
-
           <el-carousel trigger="click" indicator-position="none" arrow="always" height="240px">
             <el-carousel-item v-for="(item, index) in honour" :key="index">
               <ul id="honourBox">
@@ -271,6 +200,11 @@
         </div>
       </div>
     </div>
+    <overTime ref="overTime"></overTime>
+    <awayOfficial ref="awayOfficial"></awayOfficial>
+    <outOff ref="outOff"></outOff>
+    <leave ref="leave"></leave>
+    <contract ref="contract"></contract>
   </div>
 </template>
 
@@ -418,11 +352,7 @@
 }
 
 .entry-menu ul li a .icon-learn {
-  background-position: -117px -20px;
-}
-
-.entry-menu ul li a .icon-learn {
-  background-position: -117px -20px;
+  background-position: -110px -20px;
 }
 
 .entry-menu ul li a .icon-client {
@@ -440,6 +370,7 @@
 .entry-menu ul li a .icon-organize {
   background-position: -308px -20px;
 }
+
 
 .entry-menu ul li a .icon-oa {
   background-position: -356px -18px;
@@ -536,8 +467,8 @@
 
 .operation ul {
   padding-left: 0;
-  height: 348px;
-  overflow: hidden;
+  /* height: 348px; */
+  /* overflow: hidden; */
 }
 
 .operation ul li {
@@ -603,6 +534,10 @@
 
 .operation-room {
   background-position: -635px -75px;
+}
+
+.operation-egress {
+  background-position: -696px -75px;
 }
 
 .operation ul li:nth-child(even) {
@@ -688,6 +623,10 @@
 
 .top-line-tag-publish {
   background: #f4510b;
+}
+
+.top-line-tag-share {
+  background: #20a7f6;
 }
 
 .top-line-tag-news {
@@ -933,6 +872,7 @@
 }
 
 
+
 /*重置幻灯片样式*/
 
 .index-content .el-carousel__button {
@@ -972,10 +912,20 @@
 
 <script>
 import Header from '../index/header';
+import overTime from '@/pages/affairs/attendance/overtime';
+import awayOfficial from '@/pages/affairs/attendance/awayOfficial';
+import outOff from '@/pages/affairs/attendance/outOff';
+import leave from '@/pages/affairs/attendance/leave';
+import contract from '@/pages/contract/manage/approve';
 export default {
   name: 'index',
   components: {
-    'v-header': Header
+    'v-header': Header,
+    overTime,
+    awayOfficial,
+    outOff,
+    leave,
+    contract
   },
   data() {
     return {
@@ -989,7 +939,20 @@ export default {
       todoHandle: [], //我的工作台待办
       todoAsk: [], //我的工作台申请
       todoHandleLabel: '', //待办列表
-      fastEntry: [] // 快捷登陆入口
+      fastEntry: [{
+        name: '加班',
+        icon: 'extra'
+      }, {
+        name: '出差',
+        icon: 'egress'
+      },
+      {
+        name: '请假',
+        icon: 'leave'
+      }, {
+        name: '外出',
+        icon: 'out'
+      }] // 快捷登陆入口
     };
   },
   created() {
@@ -1003,12 +966,12 @@ export default {
         honour: "技术之星",
         describe: '对待开发工作严肃认真、精益求精，在2016年的基础上开发出了识别率高达97%的斜拍车牌识别算法，达到业界领先水平，用自己的技术为公司增加竞争力！'
       }, {
-        name: "刘源",
-        src: "liuyuan.png",
-        department: "运营部",
-        post: "活动运营经理",
-        honour: "进步之星",
-        describe: '围绕“广告、保险、车后服务”积极拓展车主增值服务，与太平洋保险签署总公司合作框架协议，并策划启动车险联合销售、太保车主日等合作业务；草拟蜜蜂停车广告刊例文档，并洽谈深港澳车展、团贷网金融理财广告合作试点；与随时喷、车发发策划机油保养、美容打蜡等活动，为下阶段增值服务产品化运营打下良好基础！'
+        name: "林坚立",
+        src: "linjianli.png",
+        department: "战略发展部",
+        post: "战略发展部总经理",
+        honour: "导师之星",
+        describe: '季度内共辅导2位新人转正，新人转正考核平均分达88.85分；导师对新人循循善导，辅导技巧灵活多样，新人不仅顺利转正，且表现优秀，均被评选为本季度的优秀个人明日之星奖！'
       }, {
         name: "吴立辉",
         src: "wulihui.png",
@@ -1113,7 +1076,7 @@ export default {
       }, {
         name: "谢月星",
         src: "xieyuexing.png",
-        department: "研发中心",
+        department: "售前技术经理",
         post: "营销中心",
         honour: "明日之星",
         describe: '在全国停车项目的集中爆发期，面对公司营销团队众多的项目支持需求，有条不紊地全力支撑前方战场、输送武器；主要牵头负责了公司NB停车项目的跟进，几个月以来取得了良好成果，与联通集团、移动集团等在NB停车方面建立了深度合作，使公司在NB技术领域站在行业前列！'
@@ -1199,7 +1162,7 @@ export default {
       }, {
         name: "汪体",
         src: "wangti.png",
-        department: "研发中心",
+        department: "实施工程师",
         post: "工程建设部",
         honour: "行动之星",
         describe: '加入工程部一年多时间里，在本职工作全部完成的同时，积极地参与到其他同事的工作中，尽自己所能挺高部门的工作效率，并积极地学习其他专业技术，扩大自己的知识范围！'
@@ -1210,14 +1173,6 @@ export default {
         post: "战略发展经理",
         honour: "讲师之星",
         describe: '二季度培训主题“规划先行-停车项目的前期工作”学员满意度高达4.91分，覆盖参训人数排名中最多达58人，在课程内容讲解方面深入浅出，互动性强，学员反馈与工作相关性较强，整体评价非常高！'
-      }],
-      6: [{
-        name: "林坚立",
-        src: "linjianli.png",
-        department: "战略发展部",
-        post: "战略发展部总经理",
-        honour: "导师之星",
-        describe: '季度内共辅导2位新人转正，新人转正考核平均分达88.85分；导师对新人循循善导，辅导技巧灵活多样，新人不仅顺利转正，且表现优秀，均被评选为本季度的优秀个人明日之星奖！'
       }]
     };
     this.workMate = [{
@@ -1298,31 +1253,9 @@ export default {
         }
       }
     });
-    this.ajax({ //获取我的待办
-      url: '/sys/process/todo/list',
-      data: {
-        pageNum: 1,
-        pageSize: 7
-      },
-      success(data, $this) {
-        if (data.code == 'success') {
-          $this.todoHandle = data.content;
-          $this.todoHandleLabel = data.totals;
-        }
-      }
-    });
-    this.ajax({ //获取我申请的
-      url: '/sys/process/myapply/list',
-      data: {
-        pageNum: 1,
-        pageSize: 7
-      },
-      success(data, $this) {
-        if (data.code == 'success') {
-          $this.todoAsk = data.content;
-        }
-      }
-    });
+
+    this.getWorkList({ index: '0' }); //获取我的待办
+
     const baseUrl = ['/project/proManage.html', '/project/projectContract.html', '/project/demandManage.html', '/project/crmClientManage.html', '/project/crmBusinessManage.html'];
     const baseEntry = [{
       url: 'pmo_add_project',
@@ -1423,10 +1356,38 @@ export default {
       const {
           pictureId
         } = this.stickNews;
-      return pictureId ? this.domain + '/news/picture/top/' + pictureId + '/download' : require('./img/news-default.png');
+      return pictureId ? this.domain + '/news/picture/top/' + pictureId + '/download?width=230&height=120' : require('./img/news-default.png');
     }
   },
   methods: {
+    getWorkList(component) { //获取工单详情
+      let flag = false;
+      let url = '';
+      if (component.index == '0') {//我的待办
+        url = '/sys/process/todo/list';
+        flag = true;
+      } else if (component.index == '1') {  //我的申请
+        url = '/sys/process/myapply/list';
+        flag = false;
+      }
+      this.ajax({ //获取我的待办
+        url: url,
+        data: {
+          pageNum: 1,
+          pageSize: 7
+        },
+        success(data, $this) {
+          if (data.code == 'success') {
+            if (flag) {
+              $this.todoHandle = data.content;
+              $this.todoHandleLabel = data.totals;
+            } else {
+              $this.todoAsk = data.content;
+            }
+          }
+        }
+      });
+    },
     restTime(dateTimeStamp) {
       var minute = 1000 * 60;
       var hour = minute * 60;
@@ -1438,6 +1399,25 @@ export default {
         return true;
       }
       return false;
+    },
+    fastEntryHandle(url) {
+      console.log(url);
+      if (url == 'extra') {  //加班
+        this.$refs.overTime.openModal();
+      }
+      if (url == 'egress') {  //初潮
+        this.$refs.awayOfficial.openModal();
+      }
+      if (url == 'leave') {  //请假
+        this.$refs.leave.openModal();
+      }
+      if (url == 'out') {  //外出
+        this.$refs.outOff.openModal();
+      }
+      if (url == 'contract') { //发起合同
+        this.$refs.contract.openModal();
+      }
+
     }
   },
   updated() {
@@ -1445,7 +1425,7 @@ export default {
         depart,
       post
       } = this.$refs;
-    if (depart.offsetWidth >= 198) {
+    if (depart && depart.offsetWidth >= 198) {
       depart.style.display = "block";
       post.style.marginTop = '-10px';
     }
@@ -1460,8 +1440,8 @@ export default {
       $(this).find('.person-honour-dpart').css('color', 'rgba(1, 1, 1, .8)');
     });
     $(".honour-synopsis").niceScroll({
-      cursorcolor:"rgba(0, 0, 0, 0.2)",
-      cursorwidth:"5px",
+      cursorcolor: "rgba(0, 0, 0, 0.2)",
+      cursorwidth: "5px",
       cursorborderradius: 5
     });
   }

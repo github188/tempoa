@@ -83,6 +83,32 @@
               暂无数据！
             </p>
           </el-tab-pane>
+
+          <el-tab-pane name="share">
+            <span slot="label">
+              <i class="icon icon-share"></i> 分享</span>
+            <div v-if="noticeList.length">
+              <ul class="news-box">
+                <li v-for="(item, index) in noticeList" :key="index">
+                  <p>
+                    <router-link class="news-title" :to="{ path: '/news/detail', query: {id: item.id}}">{{item.newsTitle}}</router-link>
+                  </p>
+                  <p class="news-time">
+                    {{new Date(item.publishDate).toString()}}
+                    <span style="padding-left: 10px;">撰稿人：{{ item.newsAuthor}}</span>
+                    <span class="comments-num">{{item.commentCount}}</span>
+                  </p>
+                  <p class="news-abstract">{{item.content | getContent}}</p>
+                  <router-link class="read-more" :to="{ path: '/news/detail', query: {id: item.id}}">查看全文></router-link>
+                </li>
+              </ul>
+              <el-pagination layout="prev, pager, next" :page-size="search.pageSize" @current-change="changePage" :total="totalPages">
+              </el-pagination>
+            </div>
+            <p style="margin-top: 130px; text-align:center" v-else>
+              暂无数据！
+            </p>
+          </el-tab-pane>
         </el-tabs>
       </div>
     </div>
@@ -102,6 +128,7 @@
 
 .news-content {
   background: #fff;
+  min-height: 500px;
   padding: 30px 20px;
 }
 
@@ -145,7 +172,8 @@
   color: #01cd78;
   width: 90px;
   float: right;
-  margin-top: -45px;
+  position: relative;
+  top: -45px;
 }
 
 .comments-num {
@@ -191,6 +219,13 @@ i.icon.icon-notice {
 
 .is-active i.icon.icon-notice {
   background-position: 0 -8px;
+}
+i.icon.icon-share {
+  background-position: -163px -34px;
+}
+
+.is-active i.icon.icon-share {
+  background-position: -163px -8px;
 }
 </style>
 
@@ -264,8 +299,11 @@ export default {
       } else if (type == 1) {
         this.loadList('2');
         this.activeTab = 'notice';
-      } else {
+      }else if (type == 2) {
         this.loadList('3');
+        this.activeTab = 'share';
+      } else {
+        this.loadList('4');
       }
     },
     loadList(tab) {
@@ -277,7 +315,7 @@ export default {
             index
           } = tab;
       }
-      if (index == '1' || index == '2') { //0-新闻， 1-资讯
+      if (index == '1' || index == '2' || index == '3') { //0-新闻， 1-资讯
         this.search.newsType = index - 1;
       } else {
         delete this.search.newsType;
@@ -294,6 +332,9 @@ export default {
             } else if (index == '2') {
               $this.noticeList = data.content;
               $this.title = "公告";
+            } else if (index == '3') {
+              $this.noticeList = data.content;
+              $this.title = "分享";
             } else {
               $this.all = data.content;
               $this.title = "全部";
@@ -304,13 +345,14 @@ export default {
     },
     changePage(currentPage) {
       this.search.pageNum = currentPage;
-      console.log(this.activeTab);
       if (this.activeTab == 'all') {
-        this.loadList('3');
+        this.loadList('4');
       } else if (this.activeTab == 'news') {
         this.loadList('1');
       } else if (this.activeTab == 'notice') {
         this.loadList('2');
+      }else if (this.activeTab == 'share') {
+        this.loadList('3');
       }
     }
   }

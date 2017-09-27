@@ -36,7 +36,7 @@
 
         <el-form-item label="合同金额：" prop="amount">
 
-          <el-tooltip placement="top">
+          <el-tooltip placement="top" :disabled="!(form.amount)">
             <span style="font-size:14px;" slot="content">{{form.amount | amount}}</span>
             <el-input v-model="form.amount">
               <el-button slot="append">元</el-button>
@@ -95,6 +95,7 @@ export default {
       modal: false,
       project: [],  //关联项目数据
       contractType: [],  //合同类型
+      fileList: [],  //临时附件
       form: {
         salesmanName: '',  //发起人
         department: '',  //发起人部门
@@ -184,7 +185,7 @@ export default {
             startTime: new Date(startTime).getTime(),
             endTime: new Date(endTime).getTime(),
             remark,
-            list: fileList
+            list: this.fileList
           };
           this.ajax({
             url: '/ctm/contract/create',
@@ -206,9 +207,9 @@ export default {
     },
 
     handleUpload(list) {  //归档合同文件
-      this.form.fileList = [];
+      this.fileList = [];
       for (let i = 0; i < list.length; i++) {
-        this.form.fileList.push({
+        this.fileList.push({
           name: list[i].name,
           id: list[i].response.content.split('.')[0]
         });

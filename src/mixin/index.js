@@ -4,7 +4,7 @@ module.exports = {
     return {
       domain: domain.appHost + domain.appRoot, //获取接口地址，其他页面就不用引入config了
       avatar: domain.avatar,
-      disable: false //按钮禁止使用，发起请求之后的等待时间不可用
+      disable: false, //按钮禁止使用，发起请求之后的等待时间不可用
     };
   },
   methods: {
@@ -68,7 +68,7 @@ module.exports = {
      */
     errorTips(name) {
       this.$message({
-        message: name || "操作失败！",
+        message: name || "操作失败!",
         type: "warning"
       });
     },
@@ -97,11 +97,12 @@ module.exports = {
     /**
      *  @description 获取用户头像
      *  @param {Object} data 用户个人信息
+     * @param {normal} data 是否原图
      */
-    getAvatar(data) {
+    getAvatar(data, {width = 200, height = 200, normal = true} = {}) {  //normal-原图
       const { headPic, sex } = data;
       if (headPic != "") {
-        return this.domain + this.avatar + headPic + "/download";
+        return normal? this.domain + this.avatar + headPic + "/download" : this.domain + this.avatar + headPic + "/download?width="+width+"&height="+ height+"";
       }
       if (sex == 1) {
         return "/static/img/man-default.png";
@@ -115,7 +116,7 @@ module.exports = {
      *  @param {Function} 回调函数
      */
     getButton(call) {
-      const id = $(".router-link-active").attr("data-id");
+      const id = $('.router-link-exact-active').attr('data-id');
       this.ajax({
         url: "/authority/resource/user/resources",
         data: {
@@ -123,10 +124,35 @@ module.exports = {
         },
         success(data) {
           if (data.code == "success") {
-            call(data.content);
+            let { content } = data;
+            call(content);
           }
         }
       });
+    },
+    /**
+     *  @description 获取附件，导出excel表等...例如合同附件等，需要权限才能下载的
+     *  @param {url} 地址
+     *  @param {name} 文件名称、包括后缀名（如果是导出则不需要name）
+     */
+    downFile(url, name){
+      const xhr = new XMLHttpRequest();
+      xhr.open("get", this.domain + url, true);
+      xhr.setRequestHeader("authorization", Utils.getValue('authorization'));
+      xhr.responseType = "blob";
+      xhr.onload = function() {
+        if(this.status == 200) {
+          let blob = new Blob([ this.response]);
+          let link = document.createElement('a');
+          link.download = name;
+          link.style.display = 'none';
+          link.href = URL.createObjectURL(blob);
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }
+      };
+      xhr.send();
     },
     /**
      *  @description 三级部门位置反转
@@ -144,33 +170,17 @@ module.exports = {
     },
     /**
    *
-   * @param {*} url
+   * @description 将对象转换成查询条件的形式 ?name="name"&age="age"
    * @param {*查询的参数条件} object
    */
-    exportReport(url, object) {
+    getParams(object) {
       let params = "";
       for (let i in object) {
         if (object[i] !== "" && object[i] !== null) {
           params += i + "=" + object[i] + "&";
         }
       }
-      window.open(
-        this.domain +
-          url +
-          "?" +
-          params +
-          "authorization=" +
-          Utils.getValue("authorization") +
-          "&userId=" +
-          Utils.getValue("u")
-      );
+      return params.substring(0,params.length -1);
     }
-  },
-  mounted(){
-    $("body").niceScroll({
-      cursorcolor:"rgba(125, 125, 125, 0.7)",
-      cursorwidth:"10px",
-      cursorborderradius: 5
-    });
   }
 };

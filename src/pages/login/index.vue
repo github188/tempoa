@@ -14,7 +14,7 @@
           <div class="form-item">
             <input v-model.trim:password="password" id="password" type="password" placeholder="密码" autocomplete="off">
           </div>
-          <input type="checkbox" v-model="checkBox" name="rememberAccount" id="rememberAccount">
+          <input type="checkbox" v-model="checkBox" name="rememberAccount" class="remember-account-input" id="rememberAccount">
           <label for="rememberAccount" class="remember-account" data-name="记住账号"></label>
           <button type="button" :disabled="disable" class="btn btn-login" v-if="disable">
             <i class="el-icon-loading"></i>
@@ -217,8 +217,10 @@ input:-webkit-autofill {
   height: 24px;
   color: #000;
 }
-
-#rememberAccount:checked+label {
+.remember-account-input{
+  opacity: 0;
+}
+.remember-account-input:checked+label {
   background-position: -153px -35px;
 }
 

@@ -3,7 +3,7 @@
     <v-panel>
       <el-form ref="formInline" :model="form" label-width="100px" :inline="true">
         <el-form-item label="考勤设置：">
-          <el-select v-model="form.select" placeholder="请选择" @change="changeHandle">
+          <el-select v-model="form.select" placeholder="请选择" @change="changeHandle" style="width: 180px;">
             <el-option label="审批设置" :value="0"></el-option>
             <el-option label="考勤管理员设置" :value="1"></el-option>
             <el-option label="考勤查看设置" :value="2"></el-option>
@@ -14,13 +14,15 @@
       <div class="table-list" v-if="form.select == 0" id="planeList"></div>
       <div class="table-list" v-if="form.select == 1" id="approveList"></div>
       <template v-if="form.select == 2">
+
         <el-button type="success" @click="addCheckPerson" style="float:right; margin-top:-54px;">添 加</el-button>
+        <span class="check-tips">可以查看所有人的考勤记录</span>
         <div class="table-list" id="checkList"></div>
       </template>
 
       <el-dialog :title="title" :visible.sync="modal" size="tiny" class="tiny-type-modal">
         <el-form label-width="80px" label-position="right">
-          <el-form-item label="审批人：">
+          <el-form-item label="姓名：">
             <el-select v-model="person" filterable :multiple="false" placeholder="请输入关键字">
               <el-option v-for="item in personList" :key="item.id" :label="item.realname" :value="item.id + '|' + item.realname">
                 <span style="float:left" class="search-label">{{item.realname}}</span>
@@ -46,10 +48,18 @@
   width: 500px;
 }
 
+.check-tips {
+  position: relative;
+  top: -48px;
+  left: 300px;
+  color: red;
+}
+
 .tiny-type-modal .el-input {
   width: 350px !important;
 }
-.table-list{
+
+.table-list {
   margin-bottom: 30px;
 }
 </style>
@@ -83,7 +93,7 @@ export default {
           name: '名称',
           value: 'nodeName'
         }, {
-          name: '审批人',
+          name: '姓名',
           render(row) {
             const userName = row.userName;
             return userName || '/';
@@ -120,7 +130,7 @@ export default {
           name: '审批名称',
           value: 'depName'
         }, {
-          name: '审批人',
+          name: '姓名',
           value: 'name',
           render(row) {
             const userName = row.userName;
@@ -155,7 +165,7 @@ export default {
       const $this = this;
       this.tableList({
         columns: [{
-          name: '审批人',
+          name: '姓名',
           value: 'name',
           render(row) {
             const userName = row.userName;
@@ -167,25 +177,25 @@ export default {
             return [{
               name: '删除',
               click(row) {
-                  $this.confirmTips({
+                $this.confirmTips({
                   title: '删除确认',
                   content: '您确定删除吗？',
-                  submit(){
+                  submit() {
                     $this.ajax({
-                    url: '/authority/role/user/delete',
-                    type: 'put',
-                    data: {
-                      userId: row.userId
-                    },
-                    success(data) {
-                      if (data.code == 'success') {
-                        $this.successTips();
-                        $this.getCheckList();
-                      } else {
-                        $this.errorTips(data.message);
+                      url: '/authority/role/user/delete',
+                      type: 'put',
+                      data: {
+                        userId: row.userId
+                      },
+                      success(data) {
+                        if (data.code == 'success') {
+                          $this.successTips();
+                          $this.getCheckList();
+                        } else {
+                          $this.errorTips(data.message);
+                        }
                       }
-                    }
-                  });
+                    });
                   }
                 });
               }
@@ -222,7 +232,7 @@ export default {
         this.getCheckList();
       }
     },
-    addCheckPerson(){  //添加考勤查看人员
+    addCheckPerson() {  //添加考勤查看人员
       this.modal = true;
       this.title = '考勤查看设置';
       this.person = '';
@@ -271,22 +281,22 @@ export default {
             }
           });
       } else if (select == 2) {  //考勤查看人员设置
-      this.ajax({
-        url: '/authority/role/user/add',
-        type: 'put',
-        data: {
-          userId: this.person.split('|')[0]
-        },
-        success(data, $this){
-          if(data.code == 'success'){
-            $this.modal = false;
-            $this.successTips();
-            $this.getCheckList();
-          }else{
-            $this.errorTips(data.message);
+        this.ajax({
+          url: '/authority/role/user/add',
+          type: 'put',
+          data: {
+            userId: this.person.split('|')[0]
+          },
+          success(data, $this) {
+            if (data.code == 'success') {
+              $this.modal = false;
+              $this.successTips();
+              $this.getCheckList();
+            } else {
+              $this.errorTips(data.message);
+            }
           }
-        }
-      });
+        });
       }
     }
   }
